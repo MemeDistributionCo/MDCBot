@@ -1,7 +1,7 @@
 package com.mdc.bot.command;
 
 public enum CommandLabel {
-	HELLO("hello", HelloCommand.class);
+	HELLO("hello", HelloCommand.class),SHUTDOWN("shutdown",ShutdownCommand.class),COOL("cool",CoolCommand.class);
 	
 	private String label;
 	private Class<?> commandClass;

@@ -16,6 +16,7 @@ public class MessageListener extends ListenerAdapter {
 	//Can be found at https://github.com/DV8FromTheWorld/JDA
 	private static JDA jda;
 	
+	
 	public static void main(String[] args) {
 		try {
 			//Creates a JDA (Java Discord API) instance of "Bot" type with the bot token below. Builds account with blocking (freezes until finished, versus aSync)
@@ -34,7 +35,11 @@ public class MessageListener extends ListenerAdapter {
 		if(e.getMessage().getContent().startsWith(Command.COMMAND_PREFIX) && !e.getAuthor().isBot()) {
 			CommandSet c = Command.parseCommand(e.getMessage().getContent(), e);
 			if(c != null) {
-				c.getCommandInstance().action(c.getArgs(), c.getMessageReceivedEvent());
+				if(c.getCommandInstance().called(c.getArgs(), c.getMessageReceivedEvent())) {
+					c.getCommandInstance().action(c.getArgs(), c.getMessageReceivedEvent());
+				} else {
+					//Malformed command
+				}
 			} else {
 				//Malformed command
 			}
