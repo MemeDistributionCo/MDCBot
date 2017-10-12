@@ -12,7 +12,7 @@ public class MDCBot {
 		//Can be found at https://github.com/DV8FromTheWorld/JDA
 		private static JDA jda;
 		
-		//Version 1.0.0 b0
+		//Version 1.0.0
 		
 		public static void main(String[] args) {
 			try {
