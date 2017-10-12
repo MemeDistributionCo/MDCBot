@@ -1,6 +1,4 @@
-package com.mdc.bot.command;
-
-import com.mdc.bot.MessageListener;
+package com.mdc.bot;
 
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
