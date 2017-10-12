@@ -10,6 +10,8 @@ public class MDCBot {
 		//Can be found at https://github.com/DV8FromTheWorld/JDA
 		private static JDA jda;
 		
+		//Version 1.0.0 b0
+		
 		public static void main(String[] args) {
 			try {
 				//Creates a JDA (Java Discord API) instance of "Bot" type with the bot token below. Builds account with blocking (freezes until finished, versus aSync)
