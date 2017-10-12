@@ -5,8 +5,10 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 
 public class MDCBot {
-
-	//Will work on trying to understand this later
+	
+	
+		//Please read the readme on the github repo (https://github.com/MemeDistributionCo/MDCBot)
+		//Please do not make any changes on master or testing-merge-here
 		//Can be found at https://github.com/DV8FromTheWorld/JDA
 		private static JDA jda;
 		
