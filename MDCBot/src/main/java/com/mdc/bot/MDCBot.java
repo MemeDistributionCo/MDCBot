@@ -21,7 +21,23 @@ public class MDCBot {
 				/*
 				 * Switch TEST_TOKEN to LIVE_TOKEN when merging to master
 				 */
-				jda = new JDABuilder(AccountType.BOT).setToken(TEST_TOKEN).buildBlocking();
+				String tokenToUse;
+				if(args.length == 0) {
+					tokenToUse = TEST_TOKEN;
+				} else {
+					try {
+						boolean useLive = Boolean.parseBoolean(args[0]);
+						if(useLive) {
+							tokenToUse = LIVE_TOKEN;
+						} else {
+							tokenToUse = TEST_TOKEN;
+						}
+					} catch (Exception e) {
+						System.out.println("Error--Not a boolean value");
+						tokenToUse = TEST_TOKEN;
+					}
+				}
+				jda = new JDABuilder(AccountType.BOT).setToken(tokenToUse).buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
 			} catch (Exception e) {
