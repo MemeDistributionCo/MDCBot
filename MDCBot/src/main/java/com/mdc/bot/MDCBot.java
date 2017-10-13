@@ -11,13 +11,17 @@ public class MDCBot {
 		//Please do not make any changes on master or testing-merge-here
 		//Can be found at https://github.com/DV8FromTheWorld/JDA
 		private static JDA jda;
+		private static final String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
 		
 		//Version 1.0.0
 		
 		public static void main(String[] args) {
 			try {
 				//Creates a JDA (Java Discord API) instance of "Bot" type with the bot token below. Builds account with blocking (freezes until finished, versus aSync)
-				jda = new JDABuilder(AccountType.BOT).setToken("MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c").buildBlocking();
+				/*
+				 * Switch TEST_TOKEN to LIVE_TOKEN when merging to master
+				 */
+				jda = new JDABuilder(AccountType.BOT).setToken(TEST_TOKEN).buildBlocking();
 				jda.addEventListener(new MessageListener());
 				jda.setAutoReconnect(true);
 			} catch (Exception e) {
