@@ -16,8 +16,8 @@ public class MessageListener extends ListenerAdapter {
 		if(e.getMessage().getContent().startsWith(Command.COMMAND_PREFIX) && !e.getAuthor().isBot()) {
 			CommandSet c = Command.parseCommand(e.getMessage().getContent(), e);
 			if(c != null) {
-				if(c.getCommandInstance().called(c.getArgs(), c.getMessageReceivedEvent())) {
-					c.getCommandInstance().action(c.getArgs(), c.getMessageReceivedEvent());
+				if(c.getCommandInstance().called(c)) {
+					c.getCommandInstance().action(c);
 				} else {
 					//Malformed command
 				}

@@ -1,21 +1,20 @@
 package com.mdc.bot.command;
 
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class ShutdownCommand implements Command {
 
 	@Override
-	public boolean called(String[] args, MessageReceivedEvent e) {
+	public boolean called(CommandSet s) {
 		return true;
 	}
 
 	@Override
-	public void action(String[] args, MessageReceivedEvent e) {
+	public void action(CommandSet s) {
 		MessageBuilder mb = new MessageBuilder();
-		mb.append("Au revoir ").append(e.getGuild().getEmotesByName("thecool", true).get(0));
-		e.getTextChannel().sendMessage(mb.build()).complete();
-		e.getJDA().shutdown();
+		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
+		s.getMessageReceivedEvent().getTextChannel().sendMessage(mb.build()).complete();
+		s.getMessageReceivedEvent().getJDA().shutdown();
 	}
 
 	@Override
