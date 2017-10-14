@@ -11,25 +11,25 @@ public class ShutdownCommand implements Command {
 
 	@Override
 	public boolean called(CommandSet s) {
+		Role adminRole;
+		try {
+			adminRole = s.getMessageReceivedEvent().getGuild().getRolesByName("sd", true).get(0);
+		} catch (IndexOutOfBoundsException e) {
+			//Catching index out on this bc getRoles might rerturn null
+			s.getMessageReceivedEvent().getTextChannel().sendMessage("Role not found").complete();
+			adminRole = null;
+		}
+		Guild server = s.getMessageReceivedEvent().getGuild();
+		if(adminRole != null && !containsMember(server.getMembersWithRoles(adminRole), server.getMember(s.getSender()))) {
+			s.getMessageReceivedEvent().getTextChannel().sendMessage("Sorry, you don't have PERMISSION TO END ME").complete();
+			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public void action(CommandSet s) {
 		MessageBuilder mb = new MessageBuilder();
-		Role adminRole;
-		try {
-			adminRole = s.getMessageReceivedEvent().getGuild().getRolesByName("sd", true).get(0);
-		} catch (IndexOutOfBoundsException e) {
-			//Catching index out on this bc getRoles might rerturn null
-			s.getMessageReceivedEvent().getTextChannel().sendMessage("Role not found");
-			adminRole = null;
-		}
-		Guild server = s.getMessageReceivedEvent().getGuild();
-		//Do null check in if statement bc
-		if(adminRole != null && !containsMember(server.getMembersWithRoles(adminRole), server.getMember(s.getSender()))) {
-			s.getMessageReceivedEvent().getTextChannel().sendMessage("TTTTTTEST");
-		}
 		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
 		s.getMessageReceivedEvent().getTextChannel().sendMessage(mb.build()).complete();
 		s.getMessageReceivedEvent().getJDA().shutdown();
