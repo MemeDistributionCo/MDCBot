@@ -10,7 +10,7 @@ public class HelloCommand implements Command {
 	
 	public HelloCommand()
 	{
-		help = "Suffer";
+		help = "Usage: `--hello`";
 	}
 	
 	@Override
