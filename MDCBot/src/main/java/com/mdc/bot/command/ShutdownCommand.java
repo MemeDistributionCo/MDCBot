@@ -1,21 +1,52 @@
 package com.mdc.bot.command;
 
+import java.util.List;
+
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 
 public class ShutdownCommand implements Command {
 
 	@Override
-	public boolean called(String[] args, MessageReceivedEvent e) {
+	public boolean called(CommandSet s) {
+		Role adminRole;
+		try {
+			adminRole = s.getMessageReceivedEvent().getGuild().getRolesByName("sd", true).get(0);
+		} catch (IndexOutOfBoundsException e) {
+			//Catching index out on this bc getRoles might rerturn null
+			s.getMessageReceivedEvent().getTextChannel().sendMessage("Role not found").complete();
+			adminRole = null;
+		}
+		Guild server = s.getMessageReceivedEvent().getGuild();
+		if(adminRole != null && !containsMember(server.getMembersWithRoles(adminRole), server.getMember(s.getSender()))) {
+			s.getMessageReceivedEvent().getTextChannel().sendMessage("Sorry, you don't have PERMISSION TO END ME").complete();
+			return false;
+		}
 		return true;
 	}
 
 	@Override
-	public void action(String[] args, MessageReceivedEvent e) {
+	public void action(CommandSet s) {
 		MessageBuilder mb = new MessageBuilder();
-		mb.append("Au revoir ").append(e.getGuild().getEmotesByName("thecool", true).get(0));
-		e.getTextChannel().sendMessage(mb.build()).complete();
-		e.getJDA().shutdown();
+		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
+		s.getMessageReceivedEvent().getTextChannel().sendMessage(mb.build()).complete();
+		s.getMessageReceivedEvent().getJDA().shutdown();
+	}
+	
+	//I don't think the objects are equal so im making this to compare by id
+	private boolean containsMember(List<Member> memberList, Member m) {
+		if(memberList == null || m == null) {
+			return false;
+		}
+		for(Member member : memberList) {
+			if(member.getUser().getIdLong() == m.getUser().getIdLong()) {
+				//Match
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

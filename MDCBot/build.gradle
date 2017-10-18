@@ -4,9 +4,9 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
-mainClassName = 'com.example.jda.Bot'
+mainClassName = 'com.mdc.bot.MDCBot'
 
-version '1.0'
+version '1.0.1'
 
 sourceCompatibility = 1.8
 
