@@ -19,8 +19,8 @@ public class TTSCommand implements Command {
 	@Override
 	public void action(CommandSet s) {
 		if(s.getArgs().length == 0) {
-			//Toggle
-			toggleTTS();
+			//Display TTS status
+			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS is " + (MDCBot.ttsMode?"on":"off")));
 		} else if (s.getArgs().length >= 1) {
 			try {
 				Boolean b = Boolean.parseBoolean(s.getArgs()[0]);
@@ -29,8 +29,8 @@ public class TTSCommand implements Command {
 				//Just toggle
 				toggleTTS();
 			}
+			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS set to " + MDCBot.ttsMode));
 		}
-		MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS set to " + MDCBot.ttsMode));
 	}
 
 	@Override
