@@ -1,7 +1,7 @@
 package com.mdc.bot.command;
 
 public enum CommandLabel {
-	HELLO("hello", HelloCommand.class),SHUTDOWN("shutdown",ShutdownCommand.class),COOL("cool",CoolCommand.class),TTS("tts",TTSCommand.class),HELP("help",HelpCommand.class),FSpeak("fspeak",FSpeakCommand.class);
+	HELLO("hello", HelloCommand.class),SHUTDOWN("shutdown",ShutdownCommand.class),COOL("cool",CoolCommand.class),TTS("tts",TTSCommand.class),HELP("help",HelpCommand.class),FSpeak("fspeak",FSpeakCommand.class),ListCommand("commands",ListCommand.class);
 	
 	private String label;
 	private Class<?> commandClass;
