@@ -21,7 +21,7 @@ public class CoolCommand implements Command {
 
 	@Override
 	public String getHelpMessage() {
-		return "AAA";
+		return "Usage: `--cool`";
 	}
 
 }

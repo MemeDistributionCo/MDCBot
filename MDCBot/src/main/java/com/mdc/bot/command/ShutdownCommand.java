@@ -53,7 +53,7 @@ public class ShutdownCommand implements Command {
 
 	@Override
 	public String getHelpMessage() {
-		return "Affff";
+		return "Perm needed: sd | Usage: `--shutdown`";
 	}
 
 }
