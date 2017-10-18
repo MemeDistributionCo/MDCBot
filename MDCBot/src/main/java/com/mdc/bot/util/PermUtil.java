@@ -30,4 +30,20 @@ public class PermUtil {
 	public static Member userToMember(User u, Guild g) {
 		return g.getMember(u);
 	}
+	
+	/**
+	 * Join together strings in an array while adding a space in between each element
+	 * @param s
+	 * @param startingIndex
+	 * @return
+	 */
+	public static String joinStrings(String[] s, int startingIndex) {
+		if(startingIndex > s.length-1)
+			return "";
+		String fin ="";
+		for (int i = startingIndex; i < s.length; i++) {
+			fin+=s[i] + (i == s.length-1 ? "":" ");
+		}
+		return fin;
+	}
 }
