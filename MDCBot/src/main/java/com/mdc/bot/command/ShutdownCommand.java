@@ -2,6 +2,8 @@ package com.mdc.bot.command;
 
 import java.util.List;
 
+import com.mdc.bot.MDCBot;
+
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -16,12 +18,12 @@ public class ShutdownCommand implements Command {
 			adminRole = s.getMessageReceivedEvent().getGuild().getRolesByName("sd", true).get(0);
 		} catch (IndexOutOfBoundsException e) {
 			//Catching index out on this bc getRoles might rerturn null
-			s.getMessageReceivedEvent().getTextChannel().sendMessage("Role not found").complete();
+			//s.getMessageReceivedEvent().getTextChannel().sendMessage("Role not found").complete();
 			adminRole = null;
 		}
 		Guild server = s.getMessageReceivedEvent().getGuild();
 		if(adminRole != null && !containsMember(server.getMembersWithRoles(adminRole), server.getMember(s.getSender()))) {
-			s.getMessageReceivedEvent().getTextChannel().sendMessage("Sorry, you don't have PERMISSION TO END ME").complete();
+			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Sorry, you don't have PERMISSION TO END ME"));
 			return false;
 		}
 		return true;
@@ -31,7 +33,7 @@ public class ShutdownCommand implements Command {
 	public void action(CommandSet s) {
 		MessageBuilder mb = new MessageBuilder();
 		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
-		s.getMessageReceivedEvent().getTextChannel().sendMessage(mb.build()).complete();
+		MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 		s.getMessageReceivedEvent().getJDA().shutdown();
 	}
 	

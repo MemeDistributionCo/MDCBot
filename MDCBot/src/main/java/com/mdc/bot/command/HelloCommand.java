@@ -1,5 +1,7 @@
 package com.mdc.bot.command;
 
+import com.mdc.bot.MDCBot;
+
 import net.dv8tion.jda.core.MessageBuilder;
 
 public class HelloCommand implements Command {
@@ -25,7 +27,7 @@ public class HelloCommand implements Command {
 			mb.append("Hello, ");
 			mb.append(s.getSender());
 			mb.append("!");
-			s.getMessageReceivedEvent().getTextChannel().sendMessage(mb.build()).complete();
+			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 		} else {
 			System.out.println("Can't send messages in channel " + s.getMessageReceivedEvent().getChannel().getName());
 		}
