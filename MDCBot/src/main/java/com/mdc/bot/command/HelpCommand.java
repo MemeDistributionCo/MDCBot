@@ -18,7 +18,13 @@ public class HelpCommand implements Command {
 			needHelpCommand = this;
 		} else {
 			String commandName = s.getArgs()[0];
-			CommandLabel cl = CommandLabel.valueOf(commandName);
+			CommandLabel cl = null;
+			for(CommandLabel commandLabel : CommandLabel.values()) {
+				if(commandLabel.getLabel().equalsIgnoreCase(commandName)) {
+					cl = commandLabel;
+					break;
+				}
+			}
 			if(cl == null) {
 				needHelpCommand = null;
 			} else {
@@ -40,7 +46,7 @@ public class HelpCommand implements Command {
 	@Override
 	public String getHelpMessage() {
 		// TODO Auto-generated method stub
-		return "`--help <command name>";
+		return "`--help <command name>`";
 	}
 
 }
