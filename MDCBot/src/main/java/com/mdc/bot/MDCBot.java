@@ -1,5 +1,7 @@
 package com.mdc.bot;
 
+import com.mdc.bot.reaction.CoolReaction;
+
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -38,7 +40,14 @@ public class MDCBot {
 					}
 				}
 				jda = new JDABuilder(AccountType.BOT).setToken(tokenToUse).buildBlocking();
+				//Command listener
 				jda.addEventListener(new MessageListener());
+				
+				/*
+				 * Reactions and other listeners
+				 */
+				jda.addEventListener(new CoolReaction());
+				
 				jda.setAutoReconnect(true);
 			} catch (Exception e) {
 				System.out.println("There was an error enabling the bot");
