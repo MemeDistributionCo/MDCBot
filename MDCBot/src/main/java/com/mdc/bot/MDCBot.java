@@ -3,6 +3,8 @@ package com.mdc.bot;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 public class MDCBot {
 	
@@ -13,9 +15,14 @@ public class MDCBot {
 		private static JDA jda;
 		private static final String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
 		
+		//Bot settings
+		public static boolean ttsMode;
+		
+		
 		//Version 1.0.0
 		
 		public static void main(String[] args) {
+			ttsMode = false;
 			try {
 				//Creates a JDA (Java Discord API) instance of "Bot" type with the bot token below. Builds account with blocking (freezes until finished, versus aSync)
 				/*
@@ -44,6 +51,16 @@ public class MDCBot {
 				System.out.println("There was an error enabling the bot");
 				e.printStackTrace();
 			}
+		}
+		
+		/**
+		 * Sends a completed message to the text channel provided.
+		 * @param tc
+		 * @param message
+		 */
+		public static void sendMessage(TextChannel tc, MessageBuilder message) {
+			message.setTTS(ttsMode);
+			tc.sendMessage(message.build()).complete();
 		}
 	
 }
