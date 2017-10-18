@@ -6,17 +6,15 @@ public interface Command {
 	public static final String COMMAND_PREFIX = "--";
 	/**
 	 * Used to verify whether a command is valid
-	 * @param args Given strings
-	 * @param e Message Event
+	 * @param args CommandSet for this command
 	 * @return true, if valid command
 	 */
-	public boolean called(String[] args, MessageReceivedEvent e);
+	public boolean called(CommandSet s);
 	/**
 	 * Used to run a command. Should be called after {@link #called(String[], MessageReceivedEvent)} returns true.
-	 * @param args Given strings
-	 * @param e Message event
+	 * @param s CommandSet for this command
 	 */
-	public void action(String[] args, MessageReceivedEvent e);
+	public void action(CommandSet s);
 	/**
 	 * Get the help message for this command.
 	 * @return HELP

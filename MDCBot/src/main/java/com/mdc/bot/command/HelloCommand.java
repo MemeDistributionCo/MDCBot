@@ -1,7 +1,8 @@
 package com.mdc.bot.command;
 
+import com.mdc.bot.MDCBot;
+
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class HelloCommand implements Command {
 
@@ -9,26 +10,26 @@ public class HelloCommand implements Command {
 	
 	public HelloCommand()
 	{
-		help = "Suffer";
+		help = "Usage: `--hello`";
 	}
 	
 	@Override
-	public boolean called(String[] args, MessageReceivedEvent e) {
+	public boolean called(CommandSet s) {
 		//There is no way to call this wrong...
 		return true;
 	}
 
 	@Override
-	public void action(String[] args, MessageReceivedEvent e) {
+	public void action(CommandSet s) {
 		//getTextChannel because getChannel could return ... a voice channel?
-		if(e.getTextChannel().canTalk()) {
+		if(s.getMessageReceivedEvent().getTextChannel().canTalk()) {
 			MessageBuilder mb = new MessageBuilder();
 			mb.append("Hello, ");
-			mb.append(e.getAuthor());
+			mb.append(s.getSender());
 			mb.append("!");
-			e.getTextChannel().sendMessage(mb.build()).complete();
+			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 		} else {
-			System.out.println("Can't send messages in channel " + e.getChannel().getName());
+			System.out.println("Can't send messages in channel " + s.getMessageReceivedEvent().getChannel().getName());
 		}
 	}
 

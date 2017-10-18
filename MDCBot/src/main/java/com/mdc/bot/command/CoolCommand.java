@@ -1,25 +1,27 @@
 package com.mdc.bot.command;
 
+import com.mdc.bot.MDCBot;
+
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+
 
 public class CoolCommand implements Command {
 
 	@Override
-	public boolean called(String[] args, MessageReceivedEvent e) {
+	public boolean called(CommandSet s) {
 		return true;
 	}
 
 	@Override
-	public void action(String[] args, MessageReceivedEvent e) {
+	public void action(CommandSet s) {
 		MessageBuilder mb = new MessageBuilder();
-		mb.append(e.getGuild().getEmotesByName("thecool", true).get(0));
-		e.getTextChannel().sendMessage(mb.build()).complete();
+		mb.append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
+		MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 	}
 
 	@Override
 	public String getHelpMessage() {
-		return "AAA";
+		return "Usage: `--cool`";
 	}
 
 }
