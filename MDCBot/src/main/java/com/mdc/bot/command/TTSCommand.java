@@ -35,7 +35,7 @@ public class TTSCommand implements Command {
 
 	@Override
 	public String getHelpMessage() {
-		return "--tts to toggle, or --tts <true/false> to set";
+		return "--tts to show the current status, or --tts <true/false> to set";
 	}
 	
 	private void setTTS(boolean b) {
