@@ -99,7 +99,7 @@ public class Duel {
 		}
 
 		if(crit == 1) {
-			attackRoll+=1;
+			attackRoll=PermUtil.randVal(2, 19);
 		}
 		
 		bot.sendMessage(channel, new MessageBuilder().append(attacker.getUser()).append(" rolled a " + attackRoll + " for their attack role!"));
