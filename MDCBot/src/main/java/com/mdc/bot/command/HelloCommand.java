@@ -14,20 +14,20 @@ public class HelloCommand implements Command {
 	}
 	
 	@Override
-	public boolean called(CommandSet s) {
+	public boolean called(CommandSet s, MDCBot b) {
 		//There is no way to call this wrong...
 		return true;
 	}
 
 	@Override
-	public void action(CommandSet s) {
+	public void action(CommandSet s, MDCBot b) {
 		//getTextChannel because getChannel could return ... a voice channel?
 		if(s.getMessageReceivedEvent().getTextChannel().canTalk()) {
 			MessageBuilder mb = new MessageBuilder();
 			mb.append("Hello, ");
 			mb.append(s.getSender());
 			mb.append("!");
-			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
+			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 		} else {
 			System.out.println("Can't send messages in channel " + s.getMessageReceivedEvent().getChannel().getName());
 		}

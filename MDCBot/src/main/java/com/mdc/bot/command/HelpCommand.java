@@ -7,12 +7,12 @@ import net.dv8tion.jda.core.MessageBuilder;
 public class HelpCommand implements Command {
 
 	@Override
-	public boolean called(CommandSet s) {
+	public boolean called(CommandSet s, MDCBot b) {
 		return true;
 	}
 
 	@Override
-	public void action(CommandSet s) {
+	public void action(CommandSet s, MDCBot b) {
 		Command needHelpCommand;
 		if (s.getArgs().length == 0) {
 			needHelpCommand = this;
@@ -37,9 +37,9 @@ public class HelpCommand implements Command {
 			}
 		}
 		if(needHelpCommand == null) {
-			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Could not find a command with that label."));
+			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Could not find a command with that label."));
 		} else {
-			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append(needHelpCommand.getHelpMessage()));
+			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append(needHelpCommand.getHelpMessage()));
 		}
 	}
 

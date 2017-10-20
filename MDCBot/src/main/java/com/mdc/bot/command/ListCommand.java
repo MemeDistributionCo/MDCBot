@@ -7,18 +7,18 @@ import net.dv8tion.jda.core.MessageBuilder;
 public class ListCommand implements Command {
 
 	@Override
-	public boolean called(CommandSet s) {
+	public boolean called(CommandSet s, MDCBot b) {
 		return true;
 	}
 
 	@Override
-	public void action(CommandSet s) {
+	public void action(CommandSet s, MDCBot bo) {
 		MessageBuilder b = new MessageBuilder().append("Commands: \n");
 		for(CommandLabel cl : CommandLabel.values()) {
 			b.append("- " + cl.getLabel());
 			b.append("\n");
 		}
-		MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), b);
+		bo.sendMessage(s.getMessageReceivedEvent().getTextChannel(), b);
 	}
 
 	@Override

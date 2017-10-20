@@ -10,14 +10,24 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class MessageListener extends ListenerAdapter {
 	
+	private MDCBot bot;
+	
+	/**
+	 * Requires Bot for commands
+	 * @param botInstance
+	 */
+	public MessageListener(MDCBot botInstance) {
+		this.bot = botInstance;
+	}
+	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		//Listen for commands
 		if(e.getMessage().getContent().startsWith(Command.COMMAND_PREFIX) && !e.getAuthor().isBot()) {
 			CommandSet c = Command.parseCommand(e.getMessage().getContent(), e);
 			if(c != null) {
-				if(c.getCommandInstance().called(c)) {
-					c.getCommandInstance().action(c);
+				if(c.getCommandInstance().called(c, bot)) {
+					c.getCommandInstance().action(c, bot);
 				} else {
 					//Malformed command
 				}
