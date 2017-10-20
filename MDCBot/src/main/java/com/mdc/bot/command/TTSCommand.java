@@ -20,7 +20,7 @@ public class TTSCommand implements Command {
 	public void action(CommandSet s, MDCBot bot) {
 		if(s.getArgs().length == 0) {
 			//Display TTS status
-			bot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS is " + (MDCBot.ttsMode?"on":"off")));
+			bot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS is " + (bot.isTTS()?"on":"off")));
 		} else if (s.getArgs().length >= 1) {
 			try {
 				Boolean b = Boolean.parseBoolean(s.getArgs()[0]);
@@ -29,7 +29,7 @@ public class TTSCommand implements Command {
 				//Just toggle
 				toggleTTS(bot);
 			}
-			bot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS set to " + MDCBot.ttsMode));
+			bot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS set to " + bot.isTTS()));
 		}
 	}
 
@@ -43,7 +43,7 @@ public class TTSCommand implements Command {
 	}
 	
 	private void toggleTTS(MDCBot b) {
-		b.setTTS(b.isTTS());
+		b.setTTS(!b.isTTS());
 	}
 
 }

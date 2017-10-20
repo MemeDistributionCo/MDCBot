@@ -22,7 +22,6 @@ public class MDCBot {
 		//private static final String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
 		
 		//Bot settings
-		public static boolean ttsMode;
 		
 		
 		private JDA jdaInstance;
@@ -89,14 +88,13 @@ public class MDCBot {
 		 * @param message
 		 */
 		public void sendMessage(TextChannel tc, MessageBuilder message) {
-			message.setTTS(ttsMode);
+			message.setTTS(this.isTTS());
 			tc.sendMessage(message.build()).complete();
 		}
 		
 		//Version 1.1.0
 		
 		public static void main(String[] args) {
-			args = new String[] {"true"};
 			String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
 			String correctToken;
 			if(args.length == 0) {

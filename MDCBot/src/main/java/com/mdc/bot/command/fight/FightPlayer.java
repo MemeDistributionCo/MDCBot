@@ -57,6 +57,10 @@ public class FightPlayer {
 		return new FightPlayer(u);
 	}
 	
+	public static boolean doesPlayerExist(User u) {
+		return players.containsKey(u);
+	}
+	
 	public static void removeFightPlayer(FightPlayer p) {
 		removeFightPlayer(p.getUser());
 	}

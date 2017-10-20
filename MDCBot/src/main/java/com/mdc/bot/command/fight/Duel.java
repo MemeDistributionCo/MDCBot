@@ -8,10 +8,12 @@ import com.mdc.bot.util.PermUtil;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 
 public class Duel {
 	
 	private static Set<Duel> activeDuels = new HashSet<Duel>();
+	private static Set<Duel> pendingDuels = new HashSet<Duel>();
 	
 	
 	private FightPlayer p1,p2;
@@ -26,12 +28,17 @@ public class Duel {
 		turn = 0;
 		this.channel = channel;
 		this.bot = b;
-		activeDuels.add(this);
+		pendingDuels.add(this);
+	}
+	
+	public void sendStartMessage() {
+		bot.sendMessage(channel, new MessageBuilder().append(getCurrentAttacker().getUser()).append(", it is your turn to attack."));
 	}
 	
 	public void incrementTurn() {
 		turn++;
 		turn = turn %2;
+		bot.sendMessage(channel, new MessageBuilder().append(getCurrentAttacker().getUser()).append(", it is your turn to attack."));
 	}
 	
 	public FightPlayer getPlayer1() {
@@ -97,34 +104,91 @@ public class Duel {
 		
 		bot.sendMessage(channel, new MessageBuilder().append(attacker.getUser()).append(" rolled a " + attackRoll + " for their attack role!"));
 		
+		boolean death = false;
+		
 		if(attackRoll > defender.getAC()) {
 			//SHineeee
 			bot.sendMessage(channel, new MessageBuilder().append("The attack hits for " + attackDmg + " damage."));
 			if(defender.getHP() - attackDmg > 0) {
 				//Still alive
-				bot.sendMessage(channel, new MessageBuilder().append(defender.getUser()).append(" has " + defender.getHP() + " HP left."));
+				bot.sendMessage(channel, new MessageBuilder().append(defender.getUser()).append(" has " + (defender.getHP() - attackDmg) + " HP left."));
+			} else {
+				death = true;
 			}
 			defender.decrementHP(attackDmg, this);
 			
 		} else {
 			bot.sendMessage(channel, new MessageBuilder().append("The attack missed!"));
 		}
+		if(!death) this.incrementTurn();
 	}
 	
 	public void playerHasDied(FightPlayer p) {
 		if(p == p1 || p == p2) {
-			FightPlayer winner = p == p1 ? p1:p2;
+			FightPlayer winner = p == p1 ? p2:p1;
 			bot.sendMessage(channel, new MessageBuilder().append(p.getUser()).append(" has died! The winner is ").append(winner.getUser()));
 			Duel.disbandDuel(this);
 		} 
 	}
 	
-	public static void disbandDuel(Duel d) {
+	public static Duel getDuelWithPlayer(FightPlayer p) {
+		if(isPlayerInDuel(p.getUser())) {
+			for(Duel d : activeDuels) {
+				if(d.getPlayer1() == p || d.getPlayer2() == p) {
+					return d;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static boolean isPlayerInDuel(User p) {
+		for(Duel d : activeDuels) {
+			if(d.getPlayer1().getUser() == p || d.getPlayer2().getUser() == p) return true;
+		}
+		return false;
+	}
+	
+	public static boolean disbandDuel(Duel d) {
+		boolean removed = activeDuels.contains(d) || pendingDuels.contains(d);
 		activeDuels.remove(d);
+		pendingDuels.remove(d);
 		for(FightPlayer p : d.getPlayers()) {
 			FightPlayer.removeFightPlayer(p);
 		}
+		return removed;
 		//Done
+	}
+	
+	public static Duel getPendingDuelWithUsers(User u1, User u2) {
+		for(Duel d : Duel.pendingDuels) {
+			if(d.getPlayer1().getUser() == u1 || d.getPlayer1().getUser() == u2) {
+				if(d.getPlayer2().getUser() == u1 || d.getPlayer2().getUser() == u2) {
+					return d;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static void playerAcceptedDuel(User targetDuelPartner, User accepter) {
+		Duel d = getPendingDuelWithUsers(targetDuelPartner,accepter);
+		if(d == null) {
+			//Nada
+		} else {
+			Duel.pendingDuels.remove(d);
+			Duel.activeDuels.add(d);
+			d.sendStartMessage();
+		}
+	}
+	
+	public static void playerRejectedDuel(User u1, User u2) {
+		Duel d = getPendingDuelWithUsers(u1,u2);
+		if(d == null) {
+			//Nothing
+		} else {
+			Duel.disbandDuel(d);
+		}
 	}
 
 }

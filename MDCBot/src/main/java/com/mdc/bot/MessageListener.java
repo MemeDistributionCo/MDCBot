@@ -23,7 +23,7 @@ public class MessageListener extends ListenerAdapter {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		//Listen for commands
-		if(e.getMessage().getContent().startsWith(Command.COMMAND_PREFIX) && !e.getAuthor().isBot()) {
+		if(e.getMessage().getContent().startsWith(Command.COMMAND_PREFIX)) {
 			CommandSet c = Command.parseCommand(e.getMessage().getContent(), e);
 			if(c != null) {
 				if(c.getCommandInstance().called(c, bot)) {
