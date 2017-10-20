@@ -10,26 +10,26 @@ import net.dv8tion.jda.core.entities.User;
 public class TTSCommand implements Command {
 
 	@Override
-	public boolean called(CommandSet s) {
+	public boolean called(CommandSet s, MDCBot b) {
 		Guild g = s.getServer();
 		User u = s.getSender();
 		return PermUtil.isUserSD(PermUtil.userToMember(u, g));
 	}
 
 	@Override
-	public void action(CommandSet s) {
+	public void action(CommandSet s, MDCBot bot) {
 		if(s.getArgs().length == 0) {
 			//Display TTS status
-			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS is " + (MDCBot.ttsMode?"on":"off")));
+			bot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS is " + (bot.isTTS()?"on":"off")));
 		} else if (s.getArgs().length >= 1) {
 			try {
 				Boolean b = Boolean.parseBoolean(s.getArgs()[0]);
-				setTTS(b.booleanValue());
+				setTTS(b.booleanValue(), bot);
 			} catch (Exception e) {
 				//Just toggle
-				toggleTTS();
+				toggleTTS(bot);
 			}
-			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS set to " + MDCBot.ttsMode));
+			bot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), (new MessageBuilder()).append("TTS set to " + bot.isTTS()));
 		}
 	}
 
@@ -38,12 +38,12 @@ public class TTSCommand implements Command {
 		return "--tts to show the current status, or --tts <true/false> to set";
 	}
 	
-	private void setTTS(boolean b) {
-		MDCBot.ttsMode = b;
+	private void setTTS(boolean val, MDCBot b) {
+		b.setTTS(val);
 	}
 	
-	private void toggleTTS() {
-		MDCBot.ttsMode = !MDCBot.ttsMode;
+	private void toggleTTS(MDCBot b) {
+		b.setTTS(!b.isTTS());
 	}
 
 }

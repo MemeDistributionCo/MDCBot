@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.Role;
 public class ShutdownCommand implements Command {
 
 	@Override
-	public boolean called(CommandSet s) {
+	public boolean called(CommandSet s, MDCBot b) {
 		Role adminRole;
 		try {
 			adminRole = s.getMessageReceivedEvent().getGuild().getRolesByName("sd", true).get(0);
@@ -23,17 +23,17 @@ public class ShutdownCommand implements Command {
 		}
 		Guild server = s.getMessageReceivedEvent().getGuild();
 		if(adminRole != null && !containsMember(server.getMembersWithRoles(adminRole), server.getMember(s.getSender()))) {
-			MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Sorry, you don't have PERMISSION TO END ME"));
+			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Sorry, you don't have PERMISSION TO END ME"));
 			return false;
 		}
 		return true;
 	}
 
 	@Override
-	public void action(CommandSet s) {
+	public void action(CommandSet s, MDCBot b) {
 		MessageBuilder mb = new MessageBuilder();
 		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
-		MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
+		b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 		s.getMessageReceivedEvent().getJDA().shutdown();
 	}
 	

@@ -46,4 +46,14 @@ public class PermUtil {
 		}
 		return fin;
 	}
+	
+	/**
+	 * Random value, inclusive on both ends
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	public static int randVal(int begin, int end) {
+		return (int)(Math.random() * (end-begin+1)) + begin;
+	}
 }

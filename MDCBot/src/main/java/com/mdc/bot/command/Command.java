@@ -1,5 +1,7 @@
 package com.mdc.bot.command;
 
+import com.mdc.bot.MDCBot;
+
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public interface Command {
@@ -9,12 +11,12 @@ public interface Command {
 	 * @param args CommandSet for this command
 	 * @return true, if valid command
 	 */
-	public boolean called(CommandSet s);
+	public boolean called(CommandSet s, MDCBot b);
 	/**
 	 * Used to run a command. Should be called after {@link #called(String[], MessageReceivedEvent)} returns true.
 	 * @param s CommandSet for this command
 	 */
-	public void action(CommandSet s);
+	public void action(CommandSet s, MDCBot b);
 	/**
 	 * Get the help message for this command.
 	 * @return HELP

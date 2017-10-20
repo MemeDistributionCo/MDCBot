@@ -1,7 +1,9 @@
 package com.mdc.bot.command;
 
+import com.mdc.bot.command.fight.DuelCommand;
+
 public enum CommandLabel {
-	HELLO("hello", HelloCommand.class),SHUTDOWN("shutdown",ShutdownCommand.class),COOL("cool",CoolCommand.class),TTS("tts",TTSCommand.class),HELP("help",HelpCommand.class),FSpeak("fspeak",FSpeakCommand.class),ListCommand("commands",ListCommand.class);
+	HELLO("hello", HelloCommand.class),SHUTDOWN("shutdown",ShutdownCommand.class),COOL("cool",CoolCommand.class),TTS("tts",TTSCommand.class),HELP("help",HelpCommand.class),FSpeak("fspeak",FSpeakCommand.class),ListCommand("commands",ListCommand.class),DUEL("duel",DuelCommand.class);
 	
 	private String label;
 	private Class<?> commandClass;

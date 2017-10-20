@@ -8,15 +8,15 @@ import net.dv8tion.jda.core.MessageBuilder;
 public class CoolCommand implements Command {
 
 	@Override
-	public boolean called(CommandSet s) {
+	public boolean called(CommandSet s, MDCBot b) {
 		return true;
 	}
 
 	@Override
-	public void action(CommandSet s) {
+	public void action(CommandSet s, MDCBot b) {
 		MessageBuilder mb = new MessageBuilder();
 		mb.append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
-		MDCBot.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
+		b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 	}
 
 	@Override
