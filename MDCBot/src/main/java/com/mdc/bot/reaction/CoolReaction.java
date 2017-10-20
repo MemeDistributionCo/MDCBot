@@ -8,8 +8,6 @@ public class CoolReaction extends ListenerAdapter {
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
-		if(e.getAuthor().isBot())
-			return;
 		if(e.getMessage().getRawContent().contains(":thecool:")) {
 			Emote emote;
 			try {
