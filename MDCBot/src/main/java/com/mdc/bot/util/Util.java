@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 
-public class PermUtil {
+public class Util {
 
 	/**
 	 * Return whether the user has the "sd" role (Server Developer)

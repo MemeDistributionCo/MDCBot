@@ -1,7 +1,7 @@
 package com.mdc.bot.command;
 
 import com.mdc.bot.MDCBot;
-import com.mdc.bot.util.PermUtil;
+import com.mdc.bot.util.Util;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -13,7 +13,7 @@ public class TTSCommand implements Command {
 	public boolean called(CommandSet s, MDCBot b) {
 		Guild g = s.getServer();
 		User u = s.getSender();
-		return PermUtil.isUserSD(PermUtil.userToMember(u, g));
+		return Util.isUserSD(Util.userToMember(u, g));
 	}
 
 	@Override

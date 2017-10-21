@@ -3,7 +3,7 @@ package com.mdc.bot.command;
 import java.util.List;
 
 import com.mdc.bot.MDCBot;
-import com.mdc.bot.util.PermUtil;
+import com.mdc.bot.util.Util;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -20,7 +20,7 @@ public class FSpeakCommand implements Command {
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Need at least 2 arguments"));
 			return false;
 		}
-		return PermUtil.isUserSD(PermUtil.userToMember(u, g));
+		return Util.isUserSD(Util.userToMember(u, g));
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class FSpeakCommand implements Command {
 			return;
 		}
 		
-		b.sendMessage(tc.get(0), new MessageBuilder().append(PermUtil.joinStrings(s.getArgs(), 1)));
+		b.sendMessage(tc.get(0), new MessageBuilder().append(Util.joinStrings(s.getArgs(), 1)));
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.mdc.bot.MDCBot;
-import com.mdc.bot.util.PermUtil;
+import com.mdc.bot.util.Util;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -72,8 +72,8 @@ public class Duel {
 	}
 	
 	private void attack() {
-		int attackRoll = PermUtil.randVal(1, 20);
-		int attackDmg = PermUtil.randVal(1, 6);
+		int attackRoll = Util.randVal(1, 20);
+		int attackDmg = Util.randVal(1, 6);
 		int crit = 0;
 		FightPlayer attacker = getCurrentAttacker();
 		FightPlayer defender = getCurrentDefender();
@@ -99,7 +99,7 @@ public class Duel {
 		}
 
 		if(crit == 1) {
-			attackRoll=PermUtil.randVal(2, 19);
+			attackRoll=Util.randVal(2, 19);
 		}
 		
 		bot.sendMessage(channel, new MessageBuilder().append(attacker.getUser()).append(" rolled a " + attackRoll + " for their attack role!"));
