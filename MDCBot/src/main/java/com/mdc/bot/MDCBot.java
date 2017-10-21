@@ -92,6 +92,13 @@ public class MDCBot {
 			tc.sendMessage(message.build()).complete();
 		}
 		
+		
+		public void sendMessage(TextChannel tc, String message) {
+			MessageBuilder mb = new MessageBuilder();
+			mb.setTTS(this.isTTS());
+			mb.append(message);
+			tc.sendMessage(mb.build()).complete();
+		}
 		//Version 1.1.0
 		
 		public static void main(String[] args) {

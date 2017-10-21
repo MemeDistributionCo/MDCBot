@@ -31,6 +31,11 @@ public class Util {
 		return g.getMember(u);
 	}
 	
+	
+	public static boolean sameMember(Member m1, Member m2) {
+		return Util.sameUser(m1.getUser(), m2.getUser());
+	}
+	
 	/**
 	 * Join together strings in an array while adding a space in between each element
 	 * @param s
@@ -45,6 +50,22 @@ public class Util {
 			fin+=s[i] + (i == s.length-1 ? "":" ");
 		}
 		return fin;
+	}
+	
+	public static Member getMemberById(long id, Guild g) {
+		return g.getMemberById(id);
+	}
+	
+	/**
+	 * Check whether two users are the same
+	 * @param u1
+	 * @param u2
+	 * @return Whether they are the same
+	 */
+	public static boolean sameUser(User u1, User u2) {
+		long id1 = u1.getIdLong();
+		long id2 = u2.getIdLong();
+		return id1 == id2;
 	}
 	
 	/**
