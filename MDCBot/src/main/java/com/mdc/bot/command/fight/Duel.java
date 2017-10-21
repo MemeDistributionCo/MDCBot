@@ -171,14 +171,16 @@ public class Duel {
 		return null;
 	}
 	
-	public static void playerAcceptedDuel(User targetDuelPartner, User accepter) {
+	public static boolean playerAcceptedDuel(User targetDuelPartner, User accepter) {
 		Duel d = getPendingDuelWithUsers(targetDuelPartner,accepter);
 		if(d == null) {
 			//Nada
+			return false;
 		} else {
 			Duel.pendingDuels.remove(d);
 			Duel.activeDuels.add(d);
 			d.sendStartMessage();
+			return true;
 		}
 	}
 	

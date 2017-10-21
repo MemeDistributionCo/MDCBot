@@ -80,8 +80,11 @@ public class DuelCommand implements Command {
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Help!"));
 		} else if(s.getArgs()[0].equalsIgnoreCase("accept")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
-			Duel.playerAcceptedDuel(u, s.getSender());
-			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Duel accepted"));
+			if(Duel.playerAcceptedDuel(u, s.getSender())) {
+				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Duel accepted"));
+			} else {
+				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(),  "Couldn't accept duel");
+			}
 		} else if (s.getArgs()[0].equalsIgnoreCase("reject")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			Duel.playerRejectedDuel(u, s.getSender());
