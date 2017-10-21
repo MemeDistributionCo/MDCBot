@@ -7,7 +7,7 @@ Version: 1.1.0 u03
 
 When working on the bot, please make a seperate branch for whatever thing you are trying to do. After completing, make a pull request for your branch into the testing-merge branch.
 
-### Version 1.1.0 u03:
+### Version 1.1.0 u04:
 
 ##### Commands:
 All commands start with `--`
