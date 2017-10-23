@@ -1,5 +1,13 @@
 package com.mdc.bot.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import com.mdc.bot.util.exception.TokenNotFoundException;
+
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -7,6 +15,10 @@ import net.dv8tion.jda.core.entities.User;
 
 public class Util {
 
+	private final static String BOT_PATH = System.getProperty("user.home") + File.separatorChar + "MDCBot";
+	private final static String BOT_SETTINGS_PATH = BOT_PATH + File.separatorChar + "settings";
+	private final static String TOKEN_FILE_PATH = BOT_SETTINGS_PATH + File.separatorChar + "token.txt";
+	
 	/**
 	 * Return whether the user has the "sd" role (Server Developer)
 	 * @param a The member
@@ -87,5 +99,30 @@ public class Util {
 	 */
 	public static int randVal(int begin, int end) {
 		return (int)(Math.random() * (end-begin+1)) + begin;
+	}
+	
+	public static String readToken() throws IOException, TokenNotFoundException {
+		File tokenFolder = new File(Util.BOT_SETTINGS_PATH);
+		if(!tokenFolder.exists()) {
+			tokenFolder.mkdirs();
+		}
+		File tokenFile = new File(Util.TOKEN_FILE_PATH);
+		if(!tokenFile.exists()) {
+			tokenFile.createNewFile();
+			FileWriter fw = new FileWriter(tokenFile);
+			fw.write("token: ");
+			fw.close();
+			//Token never existed
+			throw new TokenNotFoundException("We had to generate a new token file for you. You cannot run a bot without a token.", Util.TOKEN_FILE_PATH);
+		}
+		
+		BufferedReader fr = new BufferedReader(new FileReader(tokenFile));
+		String token = fr.readLine();
+		fr.close();
+		token = token.replace("token:", "");
+		//token.replace(" ", "");
+		token = token.trim();
+	
+		return token;
 	}
 }

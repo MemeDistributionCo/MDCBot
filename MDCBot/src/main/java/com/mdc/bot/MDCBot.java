@@ -1,8 +1,12 @@
 package com.mdc.bot;
 
+import java.io.IOException;
+
 import javax.security.auth.login.LoginException;
 
 import com.mdc.bot.reaction.CoolReaction;
+import com.mdc.bot.util.Util;
+import com.mdc.bot.util.exception.TokenNotFoundException;
 
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -103,30 +107,44 @@ public class MDCBot {
 		
 		public static void main(String[] args) {
 			//args = new String[] {"true"};
-			String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
-			String correctToken;
-			if(args.length == 0) {
-				correctToken = TEST_TOKEN;
-			} else {
-				try {
-					boolean val = Boolean.parseBoolean(args[0]);
-					if(val) {
-						correctToken = LIVE_TOKEN;
-					} else {
-						correctToken = TEST_TOKEN;
-					}
-				} catch (Exception e) {
-					correctToken = TEST_TOKEN;
-				}
+			//String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
+			//String correctToken;
+			//if(args.length == 0) {
+			//	correctToken = TEST_TOKEN;
+			//} else {
+			//	try {
+			//		boolean val = Boolean.parseBoolean(args[0]);
+			//		if(val) {
+			//			correctToken = LIVE_TOKEN;
+			//		} else {
+			//			correctToken = TEST_TOKEN;
+			//		}
+			//	} catch (Exception e) {
+			//		correctToken = TEST_TOKEN;
+			//	}
+			//}
+			String token;
+			try {
+				token = Util.readToken();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("Could not read or write token file...");
+				System.exit(1);
+				return;
+			} catch (TokenNotFoundException e) {
+				System.out.println(e.getMessage());
+				System.out.println("Token file path: " + e.getTokenPath());
+				System.exit(1);
+				return;
 			}
 			
-			MDCBot newBot = new MDCBot(correctToken);
+			MDCBot newBot = new MDCBot(token);
 			
 			try {
 				newBot.login();
 			} catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {
 				e.printStackTrace();
-				System.out.println("Unable to log in! Yikes!");
+				System.out.println("Unable to log in! Yikes! (Invalid token?)");
 			}
 			
 		}
