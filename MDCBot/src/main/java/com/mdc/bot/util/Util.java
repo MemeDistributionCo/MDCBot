@@ -15,9 +15,9 @@ import net.dv8tion.jda.core.entities.User;
 
 public class Util {
 
-	private final static String BOT_PATH = System.getProperty("user.home") + File.separatorChar + "MDCBot";
-	private final static String BOT_SETTINGS_PATH = BOT_PATH + File.separatorChar + "settings";
-	private final static String TOKEN_FILE_PATH = BOT_SETTINGS_PATH + File.separatorChar + "token.txt";
+	public final static String BOT_PATH = System.getProperty("user.home") + File.separatorChar + "MDCBot";
+	public final static String BOT_SETTINGS_PATH = BOT_PATH + File.separatorChar + "settings";
+	public final static String TOKEN_FILE_PATH = BOT_SETTINGS_PATH + File.separatorChar + "token.txt";
 	
 	/**
 	 * Return whether the user has the "sd" role (Server Developer)
@@ -101,6 +101,12 @@ public class Util {
 		return (int)(Math.random() * (end-begin+1)) + begin;
 	}
 	
+	/**
+	 * Attempts to read the token from the {@link com.mdc.bot.util.Util#TOKEN_FILE_PATH Token File}. If the file didn't exist previously, it is created and a {@link TokenNotFoundException} is thrown.
+	 * @return
+	 * @throws IOException
+	 * @throws TokenNotFoundException
+	 */
 	public static String readToken() throws IOException, TokenNotFoundException {
 		File tokenFolder = new File(Util.BOT_SETTINGS_PATH);
 		if(!tokenFolder.exists()) {

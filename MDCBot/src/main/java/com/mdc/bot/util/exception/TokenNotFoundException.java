@@ -1,5 +1,10 @@
 package com.mdc.bot.util.exception;
 
+/**
+ * Thrown when a token file is not found.
+ * @author xDest
+ *
+ */
 public class TokenNotFoundException extends Exception {
 
 	/**
