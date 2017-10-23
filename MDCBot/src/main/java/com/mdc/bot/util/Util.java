@@ -31,7 +31,12 @@ public class Util {
 		return g.getMember(u);
 	}
 	
-	
+	/**
+	 * Compare two members to see if they are the same.
+	 * @param m1
+	 * @param m2
+	 * @return
+	 */
 	public static boolean sameMember(Member m1, Member m2) {
 		return Util.sameUser(m1.getUser(), m2.getUser());
 	}
@@ -52,6 +57,12 @@ public class Util {
 		return fin;
 	}
 	
+	/**
+	 * Retrieve a member from a guild by their id.
+	 * @param id
+	 * @param g
+	 * @return
+	 */
 	public static Member getMemberById(long id, Guild g) {
 		return g.getMemberById(id);
 	}
