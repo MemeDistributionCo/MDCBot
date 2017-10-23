@@ -1,4 +1,4 @@
-package com.mdc.bot.command.fight;
+package com.mdc.bot.command.game;
 
 import com.mdc.bot.MDCBot;
 
@@ -77,7 +77,12 @@ public class DuelCommand implements Command {
 			duel.userTriedAttack(dueler);
 		} else if(s.getArgs()[0].equalsIgnoreCase("help")) { 
 			//Do Later
-			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Help!"));
+			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Duel help:\n"
+					+ "--duel @user  ||  Creates a duel request with a user. If the user or requester is in a duel, the request will fail.\n"
+					+ "--duel accept @user  ||  Accepts an outgoing request from the specified @user. Will fail if there is no request.\n"
+					+ "--duel reject @user  ||  Rejects an outgoing request from the specified @user. Will fail if there is no request.\n"
+					+ "--duel attack  ||  Attacks, if you are in a duel.\n"
+					+ "--duel help  ||  Displays this message.");
 		} else if(s.getArgs()[0].equalsIgnoreCase("accept")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			if(Duel.playerAcceptedDuel(u, s.getSender())) {
@@ -95,6 +100,7 @@ public class DuelCommand implements Command {
 			FightPlayer p1 = FightPlayer.getFightPlayer(target);
 			FightPlayer p2 = FightPlayer.getFightPlayer(initiator);
 			new Duel(p1,p2, s.getMessageReceivedEvent().getTextChannel(), b);
+			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Duel request created with players " + target.getAsMention() + " and " + initiator.getAsMention());
 		}
 		
 	

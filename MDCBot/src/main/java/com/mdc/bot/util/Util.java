@@ -1,5 +1,13 @@
 package com.mdc.bot.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import com.mdc.bot.util.exception.TokenNotFoundException;
+
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -7,6 +15,10 @@ import net.dv8tion.jda.core.entities.User;
 
 public class Util {
 
+	public final static String BOT_PATH = System.getProperty("user.home") + File.separatorChar + "MDCBot";
+	public final static String BOT_SETTINGS_PATH = BOT_PATH + File.separatorChar + "settings";
+	public final static String TOKEN_FILE_PATH = BOT_SETTINGS_PATH + File.separatorChar + "token.txt";
+	
 	/**
 	 * Return whether the user has the "sd" role (Server Developer)
 	 * @param a The member
@@ -31,7 +43,12 @@ public class Util {
 		return g.getMember(u);
 	}
 	
-	
+	/**
+	 * Compare two members to see if they are the same.
+	 * @param m1
+	 * @param m2
+	 * @return
+	 */
 	public static boolean sameMember(Member m1, Member m2) {
 		return Util.sameUser(m1.getUser(), m2.getUser());
 	}
@@ -52,6 +69,12 @@ public class Util {
 		return fin;
 	}
 	
+	/**
+	 * Retrieve a member from a guild by their id.
+	 * @param id
+	 * @param g
+	 * @return
+	 */
 	public static Member getMemberById(long id, Guild g) {
 		return g.getMemberById(id);
 	}
@@ -76,5 +99,36 @@ public class Util {
 	 */
 	public static int randVal(int begin, int end) {
 		return (int)(Math.random() * (end-begin+1)) + begin;
+	}
+	
+	/**
+	 * Attempts to read the token from the {@link com.mdc.bot.util.Util#TOKEN_FILE_PATH Token File}. If the file didn't exist previously, it is created and a {@link TokenNotFoundException} is thrown.
+	 * @return
+	 * @throws IOException
+	 * @throws TokenNotFoundException
+	 */
+	public static String readToken() throws IOException, TokenNotFoundException {
+		File tokenFolder = new File(Util.BOT_SETTINGS_PATH);
+		if(!tokenFolder.exists()) {
+			tokenFolder.mkdirs();
+		}
+		File tokenFile = new File(Util.TOKEN_FILE_PATH);
+		if(!tokenFile.exists()) {
+			tokenFile.createNewFile();
+			FileWriter fw = new FileWriter(tokenFile);
+			fw.write("token: ");
+			fw.close();
+			//Token never existed
+			throw new TokenNotFoundException("We had to generate a new token file for you. You cannot run a bot without a token.", Util.TOKEN_FILE_PATH);
+		}
+		
+		BufferedReader fr = new BufferedReader(new FileReader(tokenFile));
+		String token = fr.readLine();
+		fr.close();
+		token = token.replace("token:", "");
+		//token.replace(" ", "");
+		token = token.trim();
+	
+		return token;
 	}
 }

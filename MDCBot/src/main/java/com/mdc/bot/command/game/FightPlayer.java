@@ -1,11 +1,11 @@
-package com.mdc.bot.command.fight;
+package com.mdc.bot.command.game;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import net.dv8tion.jda.core.entities.User;
 
-public class FightPlayer {
+public class FightPlayer implements LivingPlayer {
 	
 	private static Map<User,FightPlayer> players = new HashMap<User,FightPlayer>();
 	
@@ -50,6 +50,44 @@ public class FightPlayer {
 		return this.u;
 	}
 
+
+	@Override
+	public long getUserId() {
+		return this.u.getIdLong();
+	}
+
+	@Override
+	public boolean isDead() {
+		return this.hp <= 0;
+	}
+
+	@Override
+	public void incrementHP() {
+		this.hp++;
+	}
+
+	@Override @Deprecated
+	public void decrementHP() {
+	//	this.hp--;
+	}
+
+	@Override
+	public void setHP(int hp) {
+		this.hp = hp;
+	}
+
+	@Override
+	public void incrementHP(int h) {
+		this.hp+=h;
+	}
+
+	
+	@Override @Deprecated
+	public void decrementHP(int h) {
+		//nothing
+	}
+	
+	
 	public static FightPlayer getFightPlayer(User u) {
 		if(players.containsKey(u)) {
 			return players.get(u);
