@@ -123,7 +123,9 @@ public class Duel {
 		} else {
 			outgoingText.add("The attack missed!\n");
 		}
-		String finString = Util.joinStrings((String[])outgoingText.toArray(), 0);
+		String[] arr = new String[outgoingText.size()];
+		outgoingText.toArray(arr);
+		String finString = Util.joinStrings(arr, 0);
 		bot.sendMessage(channel, finString);
 		if(!death) this.incrementTurn();
 	}
