@@ -1,4 +1,4 @@
-package com.mdc.bot.command.fight;
+package com.mdc.bot.command.game;
 
 import java.util.HashMap;
 import java.util.Map;

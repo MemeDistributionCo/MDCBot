@@ -1,4 +1,4 @@
-package com.mdc.bot.command.fight;
+package com.mdc.bot.command.game;
 
 import com.mdc.bot.MDCBot;
 
