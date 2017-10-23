@@ -1,6 +1,8 @@
 package com.mdc.bot.command.fight;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.mdc.bot.MDCBot;
@@ -72,6 +74,7 @@ public class Duel {
 	}
 	
 	private void attack() {
+		List<String> outgoingText = new ArrayList<String>();
 		int attackRoll = Util.randVal(1, 20);
 		int attackDmg = Util.randVal(1, 6);
 		int crit = 0;
@@ -91,10 +94,10 @@ public class Duel {
 		
 		switch (crit) {
 		case 1:
-			bot.sendMessage(channel, new MessageBuilder().append("Oof! **c r i t i c a l  m i s s**. Damage switched."));
+			outgoingText.add("Oof! **c r i t i c a l  m i s s**. Damage switched.\n");
 			break;
 		case 2:
-			bot.sendMessage(channel, new MessageBuilder().append("How unlucky, ").append(defender.getUser()));
+			outgoingText.add("How unlucky, " + defender.getUser().getAsMention() + "\n");
 			break;
 		}
 
@@ -102,24 +105,26 @@ public class Duel {
 			attackRoll=Util.randVal(2, 19);
 		}
 		
-		bot.sendMessage(channel, new MessageBuilder().append(attacker.getUser()).append(" rolled a " + attackRoll + " for their attack role!"));
+		outgoingText.add(attacker.getUser().getAsMention() + " rolled a " + attackRoll + " for their attack roll!\n");
 		
 		boolean death = false;
 		
 		if(attackRoll > defender.getAC()) {
 			//SHineeee
-			bot.sendMessage(channel, new MessageBuilder().append("The attack hits for " + attackDmg + " damage."));
+			outgoingText.add("The attack hits for " + attackDmg + " damage.\n");
 			if(defender.getHP() - attackDmg > 0) {
 				//Still alive
-				bot.sendMessage(channel, new MessageBuilder().append(defender.getUser()).append(" has " + (defender.getHP() - attackDmg) + " HP left."));
+				outgoingText.add(defender.getUser().getAsMention() + " has " + (defender.getHP() - attackDmg) + " HP left.\n");
 			} else {
 				death = true;
 			}
 			defender.decrementHP(attackDmg, this);
 			
 		} else {
-			bot.sendMessage(channel, new MessageBuilder().append("The attack missed!"));
+			outgoingText.add("The attack missed!\n");
 		}
+		String finString = Util.joinStrings((String[])outgoingText.toArray(), 0);
+		bot.sendMessage(channel, finString);
 		if(!death) this.incrementTurn();
 	}
 	
