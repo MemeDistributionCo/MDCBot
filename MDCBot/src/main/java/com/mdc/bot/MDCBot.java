@@ -6,6 +6,9 @@ import javax.security.auth.login.LoginException;
 
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.util.Util;
+import com.mdc.bot.util.event.CEvent;
+import com.mdc.bot.util.event.CEventListener;
+import com.mdc.bot.util.event.RListener;
 import com.mdc.bot.util.exception.TokenNotFoundException;
 
 import net.dv8tion.jda.core.AccountType;
@@ -29,6 +32,7 @@ public class MDCBot {
 		private String token;
 		private boolean ttsEnabled;
 		private boolean loggedIn;
+		private CEventListener customListener;
 		
 		
 		/**
@@ -44,6 +48,32 @@ public class MDCBot {
 			ttsEnabled = false;
 			jdaInstance = null;
 			this.loggedIn = false;
+			customListener = new CEventListener(this);
+		}
+		
+		/**
+		 * Register a {@link RListener} to listen for custom {@link CEvent}s.
+		 * @param r The listener
+		 */
+		public void registerRListener(RListener r) {
+			this.customListener.registerListener(r);
+		}
+		
+		/**
+		 * Unregister a {@link RListener} to listen for custom {@link CEvent}s.
+		 * @param r The listener
+		 * @return The listener if it was removed, null otherwise.
+		 */
+		public RListener unregisterRListener(RListener r) {
+			return this.customListener.unregisterListener(r);
+		}
+		
+		/**
+		 * Get the custom event listener
+		 * @return
+		 */
+		public CEventListener getCEventListener() {
+			return this.customListener;
 		}
 		
 		public void login() throws LoginException,IllegalArgumentException,InterruptedException, RateLimitedException {
@@ -99,6 +129,14 @@ public class MDCBot {
 			mb.setTTS(this.isTTS());
 			mb.append(message);
 			tc.sendMessage(mb.build()).complete();
+		}
+		
+		/**
+		 * Invoke a custom event
+		 * @param e
+		 */
+		public void invokeEvent(CEvent e) {
+			this.customListener.invokeEvent(e);
 		}
 
 
