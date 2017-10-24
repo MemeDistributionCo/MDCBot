@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import com.mdc.bot.reaction.CoolReaction;
+import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.util.Util;
 import com.mdc.bot.util.event.CEvent;
 import com.mdc.bot.util.event.CEventListener;
@@ -49,6 +50,10 @@ public class MDCBot {
 			jdaInstance = null;
 			this.loggedIn = false;
 			customListener = new CEventListener(this);
+			/*
+			 * Register custom event listeners
+			 */
+			customListener.registerListener(new DuelReaction(this));
 		}
 		
 		/**
