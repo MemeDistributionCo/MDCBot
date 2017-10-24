@@ -24,6 +24,13 @@ public class DuelCommand implements Command {
 			return duel != null;
 		} else if (s.getArgs()[0].equalsIgnoreCase("help")) { 
 			return true;
+		} else if (s.getArgs()[0].equalsIgnoreCase("quit")) { 
+			//Check if user is in duel
+			if(FightPlayer.doesPlayerExist(s.getSender())) {
+				FightPlayer fp = FightPlayer.getFightPlayer(s.getSender());
+				Duel d = Duel.getDuelWithPlayer(fp);
+				return d != null;
+			}
 		} else if(s.getArgs()[0].equalsIgnoreCase("accept")) {
 			try {
 				s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
@@ -83,6 +90,15 @@ public class DuelCommand implements Command {
 					+ "--duel reject @user  ||  Rejects an outgoing request from the specified @user. Will fail if there is no request.\n"
 					+ "--duel attack  ||  Attacks, if you are in a duel.\n"
 					+ "--duel help  ||  Displays this message.");
+		} else if (s.getArgs()[0].equalsIgnoreCase("quit")) { 
+			//Quit duel
+			FightPlayer fp = FightPlayer.getFightPlayer(s.getSender());
+			Duel d = Duel.getDuelWithPlayer(fp);
+			if(Duel.disbandDuel(d)) {
+				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Quit duel");
+			} else {
+				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Failed to quit duel");
+			}
 		} else if(s.getArgs()[0].equalsIgnoreCase("accept")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			if(Duel.playerAcceptedDuel(u, s.getSender())) {

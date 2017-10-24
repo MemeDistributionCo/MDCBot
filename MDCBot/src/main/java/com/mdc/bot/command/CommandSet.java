@@ -1,6 +1,7 @@
 package com.mdc.bot.command;
 
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -12,6 +13,7 @@ public class CommandSet {
 	private final MessageReceivedEvent e;
 	private final User sender;
 	private final Guild server;
+	private final TextChannel channel;
 	
 	public CommandSet(String label, String[] args, Command c, MessageReceivedEvent e) {
 		this.label = label;
@@ -20,6 +22,11 @@ public class CommandSet {
 		this.c = c;
 		this.e = e;
 		this.server = e.getGuild();
+		this.channel = e.getTextChannel();
+	}
+	
+	public TextChannel getTextChannel() {
+		return this.channel;
 	}
 	
 	public Guild getServer() {
