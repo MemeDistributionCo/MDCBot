@@ -1,10 +1,10 @@
 package com.mdc.bot.command.game;
 
 import com.mdc.bot.MDCBot;
-
 import com.mdc.bot.command.Command;
 import com.mdc.bot.command.CommandSet;
 import com.mdc.bot.util.Util;
+import com.mdc.bot.util.event.DuelRequestEvent;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
@@ -99,7 +99,9 @@ public class DuelCommand implements Command {
 			User initiator = s.getSender();
 			FightPlayer p1 = FightPlayer.getFightPlayer(target);
 			FightPlayer p2 = FightPlayer.getFightPlayer(initiator);
-			new Duel(p1,p2, s.getMessageReceivedEvent().getTextChannel(), b);
+			Duel d = new Duel(p1,p2, s.getMessageReceivedEvent().getTextChannel(), b);
+			//DuelRequestEvent dre = new DuelRequestEvent(b.getJDAInstance(), target, initiator, d);
+			
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Duel request created with players " + target.getAsMention() + " and " + initiator.getAsMention());
 		}
 		
