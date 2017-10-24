@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.mdc.bot.MDCBot;
 import com.mdc.bot.util.Util;
+import com.mdc.bot.util.event.DuelAttackEvent;
+import com.mdc.bot.util.event.DuelDisbandEvent;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -31,6 +33,10 @@ public class Duel {
 		this.channel = channel;
 		this.bot = b;
 		pendingDuels.add(this);
+	}
+	
+	public TextChannel getChannel() {
+		return this.channel;
 	}
 	
 	public void sendStartMessage() {
@@ -127,7 +133,13 @@ public class Duel {
 		outgoingText.toArray(arr);
 		String finString = Util.joinStrings(arr, 0);
 		bot.sendMessage(channel, finString);
-		if(!death) this.incrementTurn();
+		if(!death) {
+			this.incrementTurn();
+			if(attackRoll > defender.getAC()) {
+				DuelAttackEvent dae = new DuelAttackEvent(this, attacker, defender, this.getCurrentAttacker(), attackDmg);
+				this.getBot().invokeEvent(dae);
+			}
+		}
 	}
 	
 	public void playerHasDied(FightPlayer p) {
@@ -136,6 +148,10 @@ public class Duel {
 			bot.sendMessage(channel, new MessageBuilder().append(p.getUser()).append(" has died! The winner is ").append(winner.getUser()));
 			Duel.disbandDuel(this);
 		} 
+	}
+	
+	public MDCBot getBot() {
+		return this.bot;
 	}
 	
 	public static Duel getDuelWithPlayer(FightPlayer p) {
@@ -163,6 +179,8 @@ public class Duel {
 		for(FightPlayer p : d.getPlayers()) {
 			FightPlayer.removeFightPlayer(p);
 		}
+		DuelDisbandEvent dde = new DuelDisbandEvent(d);
+		d.getBot().invokeEvent(dde);
 		return removed;
 		//Done
 	}
@@ -191,7 +209,7 @@ public class Duel {
 		}
 	}
 	
-	public static void playerRejectedDuel(User u1, User u2) {
+	public static void playerRejectedDuel(User u1, User u2, MDCBot b) {
 		Duel d = getPendingDuelWithUsers(u1,u2);
 		if(d == null) {
 			//Nothing

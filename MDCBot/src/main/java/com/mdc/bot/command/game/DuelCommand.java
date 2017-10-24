@@ -48,10 +48,10 @@ public class DuelCommand implements Command {
 					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel yourself, fool."));
 					return false;
 				}
-				if(Util.getMemberById(target.getIdLong(), s.getServer()).getUser().isBot()) {
-					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel bots (Yet)"));
-					return false;
-				}
+				//if(Util.getMemberById(target.getIdLong(), s.getServer()).getUser().isBot()) {
+					//b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel bots (Yet)"));
+					//return false;
+				//}
 				if(Duel.isPlayerInDuel(target) || Duel.isPlayerInDuel(initiator)) {
 					//Can't already be in a duel
 					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Someone is already in a duel"));
@@ -92,7 +92,7 @@ public class DuelCommand implements Command {
 			}
 		} else if (s.getArgs()[0].equalsIgnoreCase("reject")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
-			Duel.playerRejectedDuel(u, s.getSender());
+			Duel.playerRejectedDuel(u, s.getSender(), b);
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Duel rejected"));
 		} else {
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
@@ -100,9 +100,12 @@ public class DuelCommand implements Command {
 			FightPlayer p1 = FightPlayer.getFightPlayer(target);
 			FightPlayer p2 = FightPlayer.getFightPlayer(initiator);
 			Duel d = new Duel(p1,p2, s.getMessageReceivedEvent().getTextChannel(), b);
-			//DuelRequestEvent dre = new DuelRequestEvent(b.getJDAInstance(), target, initiator, d);
-			
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Duel request created with players " + target.getAsMention() + " and " + initiator.getAsMention());
+			
+			//Invoke event
+			DuelRequestEvent dre = new DuelRequestEvent(initiator, target, d);
+			b.invokeEvent(dre);
+			
 		}
 		
 	
