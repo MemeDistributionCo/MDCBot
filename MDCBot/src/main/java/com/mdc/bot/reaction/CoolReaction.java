@@ -14,6 +14,10 @@ public class CoolReaction extends ListenerAdapter {
 		this.bot = b;
 	}
 	
+	public MDCBot getBot() {
+		return this.bot;
+	}
+	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		if(e.getMessage().getRawContent().contains(":thecool:")) {
