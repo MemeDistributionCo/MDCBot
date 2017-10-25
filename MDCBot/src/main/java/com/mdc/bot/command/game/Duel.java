@@ -138,7 +138,11 @@ public class Duel {
 			if(attackRoll > defender.getAC()) {
 				DuelAttackEvent dae = new DuelAttackEvent(this, attacker, defender, this.getCurrentAttacker(), attackDmg);
 				this.getBot().invokeEvent(dae);
-			}
+			} else {
+				//Attack missed
+				DuelAttackEvent dae = new DuelAttackEvent(this, attacker, defender, this.getCurrentAttacker(), 0);
+				this.getBot().invokeEvent(dae);
+			}//TODO add else clause
 		}
 	}
 	
