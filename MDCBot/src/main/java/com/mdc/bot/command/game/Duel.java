@@ -209,6 +209,13 @@ public class Duel {
 			Duel.pendingDuels.remove(d);
 			Duel.activeDuels.add(d);
 			d.sendStartMessage();
+			//Remove player from other pending duels
+			for (Duel toCheck : pendingDuels) {
+				if (toCheck.isPlayerInDuel(accepter) ||
+						toCheck.isPlayerInDuel(targetDuelPartner))
+					pendingDuels.remove(toCheck);
+			}
+			
 			return true;
 		}
 	}
