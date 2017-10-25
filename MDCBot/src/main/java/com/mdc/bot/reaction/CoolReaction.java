@@ -2,16 +2,14 @@ package com.mdc.bot.reaction;
 
 import com.mdc.bot.MDCBot;
 
+
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class CoolReaction extends ListenerAdapter {
-
-	private MDCBot bot;
+public class CoolReaction extends Reaction {
 	
 	public CoolReaction(MDCBot b) {
-		this.bot = b;
+		super(b);
 	}
 	
 	@Override

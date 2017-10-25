@@ -5,7 +5,11 @@ import java.io.IOException;
 import javax.security.auth.login.LoginException;
 
 import com.mdc.bot.reaction.CoolReaction;
+import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.util.Util;
+import com.mdc.bot.util.event.CEvent;
+import com.mdc.bot.util.event.CEventListener;
+import com.mdc.bot.util.event.RListener;
 import com.mdc.bot.util.exception.TokenNotFoundException;
 
 import net.dv8tion.jda.core.AccountType;
@@ -22,9 +26,6 @@ public class MDCBot {
 		//Please do not make any changes on master or testing-merge-here
 		//Can be found at https://github.com/DV8FromTheWorld/JDA
 		
-		//private static JDA jda;
-		//private static final String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
-		
 		//Bot settings
 		
 		
@@ -32,6 +33,7 @@ public class MDCBot {
 		private String token;
 		private boolean ttsEnabled;
 		private boolean loggedIn;
+		private CEventListener customListener;
 		
 		
 		/**
@@ -47,6 +49,36 @@ public class MDCBot {
 			ttsEnabled = false;
 			jdaInstance = null;
 			this.loggedIn = false;
+			customListener = new CEventListener(this);
+			/*
+			 * Register custom event listeners
+			 */
+			customListener.registerListener(new DuelReaction(this));
+		}
+		
+		/**
+		 * Register a {@link RListener} to listen for custom {@link CEvent}s.
+		 * @param r The listener
+		 */
+		public void registerRListener(RListener r) {
+			this.customListener.registerListener(r);
+		}
+		
+		/**
+		 * Unregister a {@link RListener} to listen for custom {@link CEvent}s.
+		 * @param r The listener
+		 * @return The listener if it was removed, null otherwise.
+		 */
+		public RListener unregisterRListener(RListener r) {
+			return this.customListener.unregisterListener(r);
+		}
+		
+		/**
+		 * Get the custom event listener
+		 * @return
+		 */
+		public CEventListener getCEventListener() {
+			return this.customListener;
 		}
 		
 		public void login() throws LoginException,IllegalArgumentException,InterruptedException, RateLimitedException {
@@ -103,26 +135,19 @@ public class MDCBot {
 			mb.append(message);
 			tc.sendMessage(mb.build()).complete();
 		}
-		//Version 1.1.0
+		
+		/**
+		 * Invoke a custom event
+		 * @param e
+		 */
+		public void invokeEvent(CEvent e) {
+			this.customListener.invokeEvent(e);
+		}
+
+
+		//Version 2.0.0
 		
 		public static void main(String[] args) {
-			//args = new String[] {"true"};
-			//String LIVE_TOKEN = "MzY3NDk2MzI5OTQ3MTE5NjE4.DL8SHQ.nW_rtXFgD7ytS3j7_lzZqxb4D5c", TEST_TOKEN = "MzY4MjE2MjU0Njg0NTk0MTc2.DMGvnw.gm57DR4Ado7zYE9M75zBI9x-38c";
-			//String correctToken;
-			//if(args.length == 0) {
-			//	correctToken = TEST_TOKEN;
-			//} else {
-			//	try {
-			//		boolean val = Boolean.parseBoolean(args[0]);
-			//		if(val) {
-			//			correctToken = LIVE_TOKEN;
-			//		} else {
-			//			correctToken = TEST_TOKEN;
-			//		}
-			//	} catch (Exception e) {
-			//		correctToken = TEST_TOKEN;
-			//	}
-			//}
 			String token;
 			try {
 				token = Util.readToken();

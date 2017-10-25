@@ -1,10 +1,10 @@
 package com.mdc.bot.command.game;
 
 import com.mdc.bot.MDCBot;
-
 import com.mdc.bot.command.Command;
 import com.mdc.bot.command.CommandSet;
 import com.mdc.bot.util.Util;
+import com.mdc.bot.util.event.DuelRequestEvent;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
@@ -24,6 +24,13 @@ public class DuelCommand implements Command {
 			return duel != null;
 		} else if (s.getArgs()[0].equalsIgnoreCase("help")) { 
 			return true;
+		} else if (s.getArgs()[0].equalsIgnoreCase("quit")) { 
+			//Check if user is in duel
+			if(FightPlayer.doesPlayerExist(s.getSender())) {
+				FightPlayer fp = FightPlayer.getFightPlayer(s.getSender());
+				Duel d = Duel.getDuelWithPlayer(fp);
+				return d != null;
+			}
 		} else if(s.getArgs()[0].equalsIgnoreCase("accept")) {
 			try {
 				s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
@@ -48,10 +55,10 @@ public class DuelCommand implements Command {
 					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel yourself, fool."));
 					return false;
 				}
-				if(Util.getMemberById(target.getIdLong(), s.getServer()).getUser().isBot()) {
-					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel bots (Yet)"));
-					return false;
-				}
+				//if(Util.getMemberById(target.getIdLong(), s.getServer()).getUser().isBot()) {
+					//b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel bots (Yet)"));
+					//return false;
+				//}
 				if(Duel.isPlayerInDuel(target) || Duel.isPlayerInDuel(initiator)) {
 					//Can't already be in a duel
 					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Someone is already in a duel"));
@@ -83,6 +90,15 @@ public class DuelCommand implements Command {
 					+ "--duel reject @user  ||  Rejects an outgoing request from the specified @user. Will fail if there is no request.\n"
 					+ "--duel attack  ||  Attacks, if you are in a duel.\n"
 					+ "--duel help  ||  Displays this message.");
+		} else if (s.getArgs()[0].equalsIgnoreCase("quit")) { 
+			//Quit duel
+			FightPlayer fp = FightPlayer.getFightPlayer(s.getSender());
+			Duel d = Duel.getDuelWithPlayer(fp);
+			if(Duel.disbandDuel(d)) {
+				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Quit duel");
+			} else {
+				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Failed to quit duel");
+			}
 		} else if(s.getArgs()[0].equalsIgnoreCase("accept")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			if(Duel.playerAcceptedDuel(u, s.getSender())) {
@@ -92,15 +108,20 @@ public class DuelCommand implements Command {
 			}
 		} else if (s.getArgs()[0].equalsIgnoreCase("reject")) {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
-			Duel.playerRejectedDuel(u, s.getSender());
+			Duel.playerRejectedDuel(u, s.getSender(), b);
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Duel rejected"));
 		} else {
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			User initiator = s.getSender();
 			FightPlayer p1 = FightPlayer.getFightPlayer(target);
 			FightPlayer p2 = FightPlayer.getFightPlayer(initiator);
-			new Duel(p1,p2, s.getMessageReceivedEvent().getTextChannel(), b);
+			Duel d = new Duel(p1,p2, s.getMessageReceivedEvent().getTextChannel(), b);
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), "Duel request created with players " + target.getAsMention() + " and " + initiator.getAsMention());
+			
+			//Invoke event
+			DuelRequestEvent dre = new DuelRequestEvent(initiator, target, d);
+			b.invokeEvent(dre);
+			
 		}
 		
 	
