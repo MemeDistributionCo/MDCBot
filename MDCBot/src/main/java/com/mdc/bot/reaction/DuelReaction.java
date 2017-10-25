@@ -43,7 +43,9 @@ public class DuelReaction extends Reaction implements RListener {
 		if(e.getDuel() != currentDuel) return;
 		if(!Util.sameUser(e.getAttacker().getUser(), b.getJDAInstance().getSelfUser())) {
 			//Opponent attacked
-			if(e.getDamage() >= 3) {
+			if (e.getDamage() == 0) {
+				b.sendMessage(e.getDuel().getChannel(), "Hah. You missed.");
+			} else if (e.getDamage() >= 3) {
 				b.sendMessage(e.getDuel().getChannel(), "'Tis but a scratch, fool.");
 			} else {
 				b.sendMessage(e.getDuel().getChannel(), e.getDamage() + " damage? Weak.");
