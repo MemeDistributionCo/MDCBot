@@ -29,6 +29,8 @@ public class DuelReaction extends Reaction implements RListener {
 	 */
 	public void onDuelRequest(DuelRequestEvent e) {
 		//Accept duel
+		//Check if the bot is in this duel??
+		if(!Util.sameUser(e.getTarget(), this.getBot().getJDAInstance().getSelfUser())) return;
 		e.getBot().sendMessage(e.getDuel().getChannel(), "--duel accept " + e.getRequester().getAsMention());
 		currentDuel = e.getDuel();
 		e.getBot().sendMessage(e.getDuel().getChannel(), "--duel attack");
