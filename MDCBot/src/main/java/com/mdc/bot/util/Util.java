@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 import com.mdc.bot.util.exception.TokenNotFoundException;
 
@@ -12,6 +13,8 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.core.requests.restaction.AuditableRestAction;
 
 public class Util {
 
@@ -130,5 +133,32 @@ public class Util {
 		token = token.trim();
 	
 		return token;
+	}
+	
+	/**
+	 * Adds all roles with the name "rolename" to the Member mem.
+	 * Submit action after method completed
+	 * @param g The guild to check for role, member, etc.
+	 * @param mem The member to add role to
+	 * @param roleName The name of the role(s) to add
+	 * @return 
+	 */
+	public static AuditableRestAction<Void> addRolesToMember(Guild g, Member mem, String roleName) {
+		GuildController gControl = new GuildController(g);
+		List<Role> r = g.getRolesByName(roleName, true);
+		return gControl.addRolesToMember(mem, r);
+	}
+	
+	/**
+	 * Removes all roles with the name "rolename" to the Member mem
+	 * @param g The guild to check for role, member, etc.
+	 * @param mem The member to add role to
+	 * @param roleName The name of the role(s) to add
+	 * @return 
+	 */
+	public static AuditableRestAction<Void> removeRolesFromMember(Guild g, Member mem, String roleName) {
+		GuildController gControl = new GuildController(g);
+		List<Role> r = g.getRolesByName(roleName, true);
+		return gControl.removeRolesFromMember(mem, r);
 	}
 }
