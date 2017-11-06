@@ -59,7 +59,7 @@ public class DuelCommand implements Command {
 					//b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("You can't duel bots (Yet)"));
 					//return false;
 				//}
-				if(Duel.isPlayerInDuel(target) || Duel.isPlayerInDuel(initiator)) {
+				if(Duel.isPlayerInActiveDuel(target) || Duel.isPlayerInActiveDuel(initiator)) {
 					//Can't already be in a duel
 					b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Someone is already in a duel"));
 					return false;
