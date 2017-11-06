@@ -3,11 +3,11 @@
 
 # Info
 
-Version: 2.1.1 u00
+Version: 2.2.0 u00
 
 When working on the bot, please make a seperate branch for whatever thing you are trying to do. After completing, make a pull request for your branch into the testing-merge branch.
 
-### Version 2.1.1 u00:
+### Version 2.2.0 u00:
 
 ##### Commands:
 All commands start with `--`
@@ -19,6 +19,7 @@ All commands start with `--`
 * tts || Show TTS state -- Enable / Disable TTS
 * commands || Show all available commands
 * duel || Duel players!
+* game || Add/Remove yourself to various game groups
 
 #### Reactions:
 * Reacts to anyone who sends :thecool: with :thecool:
