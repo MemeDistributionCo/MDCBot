@@ -159,7 +159,7 @@ public class Duel {
 	}
 	
 	public static Duel getDuelWithPlayer(FightPlayer p) {
-		if(isPlayerInDuel(p.getUser())) {
+		if(isPlayerInActiveDuel(p.getUser())) {
 			for(Duel d : activeDuels) {
 				if(d.getPlayer1() == p || d.getPlayer2() == p) {
 					return d;
@@ -169,7 +169,11 @@ public class Duel {
 		return null;
 	}
 	
-	public static boolean isPlayerInDuel(User p) {
+	public boolean isPlayerInDuel(User u) {
+		return Util.sameUser(u, p1.getUser()) || Util.sameUser(u, p2.getUser());
+	}
+	
+	public static boolean isPlayerInActiveDuel(User p) {
 		for(Duel d : activeDuels) {
 			if(d.getPlayer1().getUser() == p || d.getPlayer2().getUser() == p) return true;
 		}
@@ -214,6 +218,7 @@ public class Duel {
 				if (toCheck.isPlayerInDuel(accepter) ||
 						toCheck.isPlayerInDuel(targetDuelPartner))
 					pendingDuels.remove(toCheck);
+				Duel.disbandDuel(toCheck);
 			}
 			
 			return true;
