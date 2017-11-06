@@ -3,11 +3,11 @@
 
 # Info
 
-Version: 2.1.1 u00
+Version: 2.1.2 u00
 
 When working on the bot, please make a seperate branch for whatever thing you are trying to do. After completing, make a pull request for your branch into the testing-merge branch.
 
-### Version 2.1.1 u00:
+### Version 2.1.2 u00:
 
 ##### Commands:
 All commands start with `--`
