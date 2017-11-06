@@ -16,14 +16,13 @@ public class GameReqCommand implements Command {
 
 	@Override
 	public boolean called(CommandSet s, MDCBot b) {
-		s.getTextChannel().sendMessage("Called");
 		if (s.getArgs().length == 1) {
 			if (s.getArgs()[0].equals("list"))
 				return true;
 		} else if (s.getArgs().length == 2) {
 			// check if bot is allowed to manange roles
 			if (!s.getServer().getSelfMember().hasPermission(Permission.MANAGE_ROLES)) {
-				s.getTextChannel().sendMessage("Unable to manage roles.");
+				b.sendMessage(s.getTextChannel(),"Unable to manage roles.");
 				return false;
 			}
 				
@@ -32,11 +31,11 @@ public class GameReqCommand implements Command {
 				 if	(getGames(s.getServer()).contains(s.getArgs()[1])) {
 					 return true;
 				 } else {
-					 s.getTextChannel().sendMessage("Game " + s.getArgs()[1] + " does not exist");
+					 b.sendMessage(s.getTextChannel(),"Game " + s.getArgs()[1] + " does not exist");
 				 }
 			}
 		}
-		s.getTextChannel().sendMessage(getHelpMessage());
+		b.sendMessage(s.getTextChannel(),getHelpMessage());
 		return false;
 	}
 
@@ -49,7 +48,7 @@ public class GameReqCommand implements Command {
 				//List games
 				m.append("\t" + game + "\n");
 			}
-			s.getTextChannel().sendMessage(m.build());
+			b.sendMessage(s.getTextChannel(),m.build().toString());
 		} else if (s.getArgs().length == 2) {
 			// join/leave
 			if (getGames(s.getServer()).contains(s.getArgs()[1])) {
