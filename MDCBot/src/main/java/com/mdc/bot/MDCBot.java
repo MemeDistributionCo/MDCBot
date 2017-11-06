@@ -34,7 +34,7 @@ public class MDCBot {
 		private boolean ttsEnabled;
 		private boolean loggedIn;
 		private CEventListener customListener;
-		private final String version = "2.1.2";
+		private final String version = "2.2.0";
 		
 		/**
 		 * Attempts to construct a Bot with the provided token.
