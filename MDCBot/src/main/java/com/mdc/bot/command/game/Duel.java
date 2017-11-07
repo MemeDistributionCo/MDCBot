@@ -26,9 +26,16 @@ public class Duel {
 	
 	private int turn;
 	
-	public Duel(FightPlayer p1, FightPlayer p2, TextChannel channel, MDCBot b) {
-		this.p1 = p1;
-		this.p2 = p2;
+	/**
+	 * It is important to make the initiator the first player
+	 * @param initiator
+	 * @param requester
+	 * @param channel
+	 * @param b
+	 */
+	public Duel(FightPlayer initiator, FightPlayer requested, TextChannel channel, MDCBot b) {
+		this.p1 = initiator;
+		this.p2 = requested;
 		turn = 0;
 		this.channel = channel;
 		this.bot = b;
@@ -206,10 +213,14 @@ public class Duel {
 	
 	public static boolean playerAcceptedDuel(User targetDuelPartner, User accepter) {
 		Duel d = getPendingDuelWithUsers(targetDuelPartner,accepter);
+		//Accepter must be p2, or the requested user
 		if(d == null) {
 			//Nada
 			return false;
 		} else {
+			if(!Util.sameUser(d.getPlayer2().getUser(), targetDuelPartner)) {
+				return false;
+			}
 			Duel.pendingDuels.remove(d);
 			Duel.activeDuels.add(d);
 			d.sendStartMessage();
@@ -232,6 +243,7 @@ public class Duel {
 		} else {
 			Duel.disbandDuel(d);
 		}
+		//Anyone can quit if they want, it's fine
 	}
 
 }
