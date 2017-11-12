@@ -19,6 +19,7 @@ All commands start with `--`
 * commands || Show all available commands
 * duel || Duel players!
 * game || Add/Remove yourself to various game groups
+* timeout || Used to send players to timeout (Using the 'timeout' role)
 
 #### Reactions:
 * Reacts to anyone who sends :thecool: with :thecool:
