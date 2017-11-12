@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
 
+import com.mdc.bot.command.game.Duel;
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.util.Util;
@@ -54,6 +55,7 @@ public class MDCBot {
 			 * Register custom event listeners
 			 */
 			customListener.registerListener(new DuelReaction(this));
+			Duel.loadStats();
 		}
 		
 		/**
