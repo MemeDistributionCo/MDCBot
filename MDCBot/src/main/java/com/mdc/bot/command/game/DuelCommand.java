@@ -3,6 +3,7 @@ package com.mdc.bot.command.game;
 import com.mdc.bot.MDCBot;
 import com.mdc.bot.command.Command;
 import com.mdc.bot.command.CommandSet;
+import com.mdc.bot.command.game.Duel.Stats;
 import com.mdc.bot.util.Util;
 import com.mdc.bot.util.event.DuelRequestEvent;
 
@@ -47,7 +48,7 @@ public class DuelCommand implements Command {
 				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Couldn't find duel request."));
 				return false;
 			}
-		} else if(s.getArgs().length >= 1 && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1) {
+		} else if(!s.getArgs()[0].equalsIgnoreCase("stats") && s.getArgs().length >= 1 && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1) {
 			try {
 				User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 				User initiator = s.getSender();
@@ -69,6 +70,8 @@ public class DuelCommand implements Command {
 				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Couldn't find player to duel"));
 				return false;
 			}
+		} else if (s.getArgs()[0].equalsIgnoreCase("stats")) {
+			return true;
 		}
 		
 		
@@ -89,6 +92,7 @@ public class DuelCommand implements Command {
 					+ "--duel accept @user  ||  Accepts an outgoing request from the specified @user. Will fail if there is no request.\n"
 					+ "--duel reject @user  ||  Rejects an outgoing request from the specified @user. Will fail if there is no request.\n"
 					+ "--duel attack  ||  Attacks, if you are in a duel.\n"
+					+ "--duel stats <@user (optional)> || Show's the duel stats of a user. Don't @ anyone to see your own stats.\n"
 					+ "--duel help  ||  Displays this message.");
 		} else if (s.getArgs()[0].equalsIgnoreCase("quit")) { 
 			//Quit duel
@@ -110,7 +114,7 @@ public class DuelCommand implements Command {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			Duel.playerRejectedDuel(u, s.getSender(), b);
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Duel rejected"));
-		} else {
+		} else if (!s.getArgs()[0].equalsIgnoreCase("stats")) {
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			User initiator = s.getSender();
 			FightPlayer p1 = FightPlayer.getFightPlayer(target);
@@ -122,6 +126,19 @@ public class DuelCommand implements Command {
 			DuelRequestEvent dre = new DuelRequestEvent(initiator, target, d);
 			b.invokeEvent(dre);
 			
+		} else {
+			if(s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 0) {
+				//Get self stats
+				long userId = s.getSender().getIdLong();
+				Stats stats = Duel.getStats(userId);
+				b.sendMessage(s.getTextChannel(), "Stats for " + s.getSender().getAsMention() + ": \nWins: " + stats.wins + "\nLosses: " + stats.losses + "\nStreak: " + (stats.streak > 2 ? "**"+stats.streak+"**":stats.streak));
+			} else {
+				//Get other stats
+				User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
+				long userId = target.getIdLong();
+				Stats stats = Duel.getStats(userId);
+				b.sendMessage(s.getTextChannel(), "Stats for " + target.getAsMention() + ": \nWins: " + stats.wins + "\nLosses: " + stats.losses + "\nStreak: " + (stats.streak > 2 ? "**"+stats.streak+"**":stats.streak));
+			}
 		}
 		
 	

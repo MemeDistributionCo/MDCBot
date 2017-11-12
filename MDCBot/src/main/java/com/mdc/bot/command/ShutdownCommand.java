@@ -35,6 +35,7 @@ public class ShutdownCommand implements Command {
 		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
 		b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
 		s.getMessageReceivedEvent().getJDA().shutdown();
+		b.getScheduler().shutdownNow();
 	}
 	
 	//I don't think the objects are equal so im making this to compare by id

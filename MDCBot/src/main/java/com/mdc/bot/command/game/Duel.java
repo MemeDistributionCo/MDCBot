@@ -1,8 +1,17 @@
 package com.mdc.bot.command.game;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.mdc.bot.MDCBot;
@@ -18,7 +27,7 @@ public class Duel {
 	
 	private static Set<Duel> activeDuels = new HashSet<Duel>();
 	private static Set<Duel> pendingDuels = new HashSet<Duel>();
-	
+	private static Map<Long,Stats> duelStats = new HashMap<Long,Stats>();
 	
 	private FightPlayer p1,p2;
 	private TextChannel channel;
@@ -26,9 +35,16 @@ public class Duel {
 	
 	private int turn;
 	
-	public Duel(FightPlayer p1, FightPlayer p2, TextChannel channel, MDCBot b) {
-		this.p1 = p1;
-		this.p2 = p2;
+	/**
+	 * It is important to make the initiator the first player
+	 * @param initiator
+	 * @param requester
+	 * @param channel
+	 * @param b
+	 */
+	public Duel(FightPlayer initiator, FightPlayer requested, TextChannel channel, MDCBot b) {
+		this.p1 = initiator;
+		this.p2 = requested;
 		turn = 0;
 		this.channel = channel;
 		this.bot = b;
@@ -150,8 +166,19 @@ public class Duel {
 		if(p == p1 || p == p2) {
 			FightPlayer winner = p == p1 ? p2:p1;
 			bot.sendMessage(channel, new MessageBuilder().append(p.getUser()).append(" has died! The winner is ").append(winner.getUser()));
+			changeUserStats(winner,p);
 			Duel.disbandDuel(this);
 		} 
+	}
+	
+	private void changeUserStats(FightPlayer winner, FightPlayer loser) {
+		Stats winnerStats = Duel.getStats(winner.getUserId());
+		Stats loserStats = Duel.getStats(loser.getUserId());
+		winnerStats.wins++;
+		winnerStats.streak++;
+		loserStats.losses++;
+		loserStats.streak=0;
+		Duel.saveStats();
 	}
 	
 	public MDCBot getBot() {
@@ -206,10 +233,14 @@ public class Duel {
 	
 	public static boolean playerAcceptedDuel(User targetDuelPartner, User accepter) {
 		Duel d = getPendingDuelWithUsers(targetDuelPartner,accepter);
+		//Accepter must be p2, or the requested user
 		if(d == null) {
 			//Nada
 			return false;
 		} else {
+			if(!Util.sameUser(d.getPlayer2().getUser(), targetDuelPartner)) {
+				return false;
+			}
 			Duel.pendingDuels.remove(d);
 			Duel.activeDuels.add(d);
 			d.sendStartMessage();
@@ -231,6 +262,87 @@ public class Duel {
 			//Nothing
 		} else {
 			Duel.disbandDuel(d);
+		}
+		//Anyone can quit if they want, it's fine
+	}
+	
+	
+	public static void loadStats() {
+		File f = new File(Util.BOT_PATH + "/Duel/stats/");
+		Duel.duelStats = new HashMap<Long,Stats>();
+		if(!f.exists()) f.mkdirs();
+		try {
+
+			for (File statFile : f.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File arg0, String arg1) {
+					return arg1.endsWith(".dsts");
+				}
+				
+			})) {
+				BufferedReader br = new BufferedReader(new FileReader(statFile));
+				String s = br.readLine();
+				String[] pair = s.split(":");
+				//0 user
+				//1 wins
+				//2 losses
+				//3 streak
+				if(pair.length == 4) {
+					long user = Long.parseLong(pair[0]);
+					int wins = Integer.parseInt(pair[1]);
+					int losses = Integer.parseInt(pair[2]);
+					int streak = Integer.parseInt(pair[3]);
+					int[] stats = new int [] {wins,losses,streak};
+					Duel.duelStats.put(user, new Stats(stats));
+				}
+				br.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Stats getStats(long user) {
+		Stats s = Duel.duelStats.get(user);
+		if(s == null) {
+			s = new Stats();
+			Duel.duelStats.put(user,s);;
+			return s;
+		}
+		return s;
+	}
+	
+	public static void saveStats() {
+		File f = new File(Util.BOT_PATH + "/Duel/stats/");
+		if(!f.exists()) f.mkdirs();
+		try {
+			for (long user : Duel.duelStats.keySet()) {
+				File userFile = new File(Util.BOT_PATH + "/Duel/stats/" + user + ".dsts");
+				if(!userFile.exists()) userFile.createNewFile();
+				BufferedWriter bw = new BufferedWriter(new FileWriter(userFile));
+				Stats stats = Duel.getStats(user);
+				if(stats != null) {
+					String line = user + ":" + stats.wins + ":" + stats.losses + ":" + stats.streak;
+					bw.write(line);
+					bw.flush();
+				}
+				bw.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static class Stats {
+		public int wins,losses,streak;
+		public Stats() {wins=losses=streak=0;}
+		public Stats(int[] arr) {
+			wins = arr[0];
+			losses = arr[1];
+			streak = arr[2];
+		};
+		public String toString() {
+			return "wins: " + wins + " losses: " + losses + " streak: " + streak;
 		}
 	}
 

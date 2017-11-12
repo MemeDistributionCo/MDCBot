@@ -1,9 +1,12 @@
 package com.mdc.bot;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.security.auth.login.LoginException;
 
+import com.mdc.bot.command.game.Duel;
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.util.Util;
@@ -34,8 +37,8 @@ public class MDCBot {
 		private boolean ttsEnabled;
 		private boolean loggedIn;
 		private CEventListener customListener;
-		
-		
+		private final String version = "2.2.0";
+		private final ScheduledExecutorService scheduler;
 		/**
 		 * Attempts to construct a Bot with the provided token.
 		 * @param token Token
@@ -54,6 +57,8 @@ public class MDCBot {
 			 * Register custom event listeners
 			 */
 			customListener.registerListener(new DuelReaction(this));
+			scheduler = Executors.newScheduledThreadPool(10);
+			Duel.loadStats();
 		}
 		
 		/**
@@ -143,7 +148,19 @@ public class MDCBot {
 		public void invokeEvent(CEvent e) {
 			this.customListener.invokeEvent(e);
 		}
+		
+		/**
+		 * Get MDCBot version
+		 * @return Version as String
+		 */
+		public String getVersion() {
+			return this.version;
+		}
 
+		
+		public ScheduledExecutorService getScheduler() {
+			return scheduler;
+		}
 
 		//Version 2.0.0
 		
