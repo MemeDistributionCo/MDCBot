@@ -92,6 +92,7 @@ public class DuelCommand implements Command {
 					+ "--duel accept @user  ||  Accepts an outgoing request from the specified @user. Will fail if there is no request.\n"
 					+ "--duel reject @user  ||  Rejects an outgoing request from the specified @user. Will fail if there is no request.\n"
 					+ "--duel attack  ||  Attacks, if you are in a duel.\n"
+					+ "--duel stats <@user (optional)> || Show's the duel stats of a user. Don't @ anyone to see your own stats.\n"
 					+ "--duel help  ||  Displays this message.");
 		} else if (s.getArgs()[0].equalsIgnoreCase("quit")) { 
 			//Quit duel
