@@ -161,4 +161,14 @@ public class Util {
 		List<Role> r = g.getRolesByName(roleName, true);
 		return gControl.removeRolesFromMember(mem, r);
 	}
+	
+	public static boolean userHasRole(User u, String role, Guild g) {
+		Member m = Util.userToMember(u, g);
+		for(Role r : m.getRoles()) {
+			if(r.getName().equalsIgnoreCase(role)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
