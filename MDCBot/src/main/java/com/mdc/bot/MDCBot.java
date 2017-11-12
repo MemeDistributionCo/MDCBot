@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import javax.security.auth.login.LoginException;
 
+import com.mdc.bot.command.game.Duel;
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.util.Util;
@@ -57,6 +58,7 @@ public class MDCBot {
 			 */
 			customListener.registerListener(new DuelReaction(this));
 			scheduler = Executors.newScheduledThreadPool(10);
+			Duel.loadStats();
 		}
 		
 		/**
