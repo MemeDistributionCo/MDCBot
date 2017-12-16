@@ -118,5 +118,10 @@ public class GameReqCommand implements Command {
 				+ "\tleave <game name> - Leave the game group\n"
 				+ "\tlist - List game groups\n";
 	}
+	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 
 }

@@ -25,6 +25,11 @@ public interface Command {
 	
 	
 	/**
+	 * 
+	 */
+	public Command[] getChildCommands();
+	
+	/**
 	 * Parse text for command, return the command given or null if no command
 	 * @param message Discord message content
 	 * @return Command or null

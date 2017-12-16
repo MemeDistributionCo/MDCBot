@@ -24,4 +24,9 @@ public class CoolCommand implements Command {
 		return "Usage: `--cool`";
 	}
 
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
+
 }

@@ -56,5 +56,10 @@ public class ShutdownCommand implements Command {
 	public String getHelpMessage() {
 		return "Perm needed: sd | Usage: `--shutdown`";
 	}
+	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 
 }

@@ -22,4 +22,9 @@ public class VersionCommand implements Command {
 		return "Usage: `--version`";
 	}
 
+	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 }

@@ -48,5 +48,10 @@ public class HelpCommand implements Command {
 		// TODO Auto-generated method stub
 		return "`--help <command name>`";
 	}
+	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 
 }

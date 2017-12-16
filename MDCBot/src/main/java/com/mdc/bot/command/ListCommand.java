@@ -26,6 +26,9 @@ public class ListCommand implements Command {
 		return "Usage: `--commands`";
 	}
 
-	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 	
 }

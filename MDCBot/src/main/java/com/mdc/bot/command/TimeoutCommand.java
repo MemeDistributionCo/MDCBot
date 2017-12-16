@@ -154,4 +154,8 @@ public class TimeoutCommand implements Command {
 		}
 	}
 
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 }

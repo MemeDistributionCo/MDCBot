@@ -39,4 +39,8 @@ public class FSpeakCommand implements Command {
 		return "--fspeak <target channel> <message...>";
 	}
 	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
 }
