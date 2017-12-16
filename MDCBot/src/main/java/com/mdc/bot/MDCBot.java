@@ -9,6 +9,7 @@ import javax.security.auth.login.LoginException;
 import com.mdc.bot.command.game.Duel;
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
+import com.mdc.bot.reaction.UpdankReaction;
 import com.mdc.bot.util.Util;
 import com.mdc.bot.util.event.CEvent;
 import com.mdc.bot.util.event.CEventListener;
@@ -96,6 +97,7 @@ public class MDCBot {
 			 * Reactions and other listeners
 			 */
 			jdaInstance.addEventListener(new CoolReaction(this));
+			jdaInstance.addEventListener(new UpdankReaction(this));
 			
 			jdaInstance.setAutoReconnect(true);
 			
