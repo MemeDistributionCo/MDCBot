@@ -29,4 +29,16 @@ public class CoolCommand implements Command {
 		return new Command[0];
 	}
 
+	@Override
+	public boolean isRootCommand() {
+		return getParentCommand() == this;
+	}
+
+	@Override
+	public Command getParentCommand() {
+		return this;
+	}
+	
+	
+
 }

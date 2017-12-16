@@ -27,4 +27,15 @@ public class VersionCommand implements Command {
 	public Command[] getChildCommands() {
 		return new Command[0];
 	}
+	
+	@Override
+	public boolean isRootCommand() {
+		return getParentCommand() == this;
+	}
+
+	@Override
+	public Command getParentCommand() {
+		return this;
+	}
+	
 }
