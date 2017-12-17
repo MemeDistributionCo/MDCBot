@@ -24,6 +24,8 @@ public class DivinePunishmentCommand implements Command {
 					while(true) {
 						if(trialedUsers.size() > 0) {
 							Trial x = trialedUsers.poll();
+							System.out.println(x + " ||||| Started");
+							if(x == null) continue;
 							startTrial(x);
 							awaitObjections(System.nanoTime());
 							endTrial(x);
@@ -56,6 +58,9 @@ public class DivinePunishmentCommand implements Command {
 		String[] newArgs = new String[s.getArgs().length-1];
 		for(int i = 0; i < newArgs.length; i++) {
 			newArgs[i] = s.getArgs()[i+1];
+		}
+		for(Trial t : trialedUsers) {
+			System.out.print(t + "  ");
 		}
 		for(Command c : children) {
 			CommandSet cs = new CommandSet(s.getArgs()[0], newArgs, c, s.getMessageReceivedEvent());
@@ -90,9 +95,9 @@ public class DivinePunishmentCommand implements Command {
 		trialActive = true;
 		String msg = "";
 		msg+="######################################################################\n";
-		msg+="                🔥 D I V I N E  P U N I S H M E N T 🔥\n";
-		msg+="        *The God " + t.god.getAsMention() + " has decided to administer **divine punishment** upon " +t.target.getAsMention() + "*\n";
-		msg+="        *Unless there is a divine objection, " + t.target.getAsMention() + " **will be punished by the gods" + (t.reason.equals("") ? "**\n":" for " + t.reason+"**\n");
+		msg+="\t\t\t\t\t\t\t\t\t\t\t\t\t\t🔥 D I V I N E  P U N I S H M E N T 🔥\n";
+		msg+="\t\t\t\t\t\t\t\t\t\t*The God " + t.god.getAsMention() + " has decided to administer **divine punishment** upon " +t.target.getAsMention() + "*\n";
+		msg+="\t\t\t\t\t\t\t\t\t\t*Unless there is a divine objection, " + t.target.getAsMention() + " **will be punished by the gods" + (t.reason.equals("") ? "***\n":" for" + t.reason+"***\n");
 		msg+="######################################################################\n";
 		t.bot.sendMessage(t.channel, msg);
 	}
@@ -111,8 +116,8 @@ public class DivinePunishmentCommand implements Command {
 			//Saved
 			String msg = "";
 			msg+="######################################################################\n";
-			msg+="                🔥 D I V I N E  P U N I S H M E N T 🔥\n";
-			msg+="    " + t.target.getAsMention() + ", the gods have chosen to spare you. Be grateful\n";
+			msg+="\t\t\t\t\t\t\t\t\t\t\t\t\t\t🔥 D I V I N E  P U N I S H M E N T 🔥\n";
+			msg+="\t\t\t\t\t\t\t\t\t\t\t\t\t" + t.target.getAsMention() + ", the gods have chosen to spare you. Be grateful\n";
 			msg+="######################################################################\n";
 			t.bot.sendMessage(t.channel, msg);
 		} else {
@@ -123,12 +128,12 @@ public class DivinePunishmentCommand implements Command {
 				godGlow = " " + t.channel.getGuild().getEmotesByName("godglow", true).get(0).getAsMention();
 			}
 			msg+="######################################################################\n";
-			msg+="                🔥 D I V I N E  P U N I S H M E N T 🔥\n";
-			msg+="    " + t.target.getAsMention() + ", **R E P E N T**\n";
-			msg+="    " + "*Omae wa, **mou shindeiru**" + godGlow + "\n";
+			msg+="\t\t\t\t\t\t\t\t\t\t\t\t\t\t🔥 D I V I N E  P U N I S H M E N T 🔥\n";
+			msg+="\t\t\t\t\t\t\t\t\t\t\t\t\t" + t.target.getAsMention() + ", **R E P E N T**\n";
+			msg+="\t\t\t\t\t\t\t\t\t\t\t\t\t" + "*Omae wa, **mou shindeiru**" + godGlow + "*\n";
 			msg+="######################################################################\n";
-			punish(t, System.nanoTime());
 			t.bot.sendMessage(t.channel, msg);
+			punish(t, System.nanoTime());
 		}
 		objectionOccured = false;
 		trialActive = false;
@@ -141,7 +146,7 @@ public class DivinePunishmentCommand implements Command {
 			timeWaited+= currentTime - startTime;
 			startTime = currentTime;
 		}
-		Util.addRolesToMember(t.channel.getGuild(), Util.getMemberById(t.target.getIdLong(), t.channel.getGuild()), "timeout");
+		Util.addRolesToMember(t.channel.getGuild(), Util.getMemberById(t.target.getIdLong(), t.channel.getGuild()), "timeout").complete();
 	}
 	
 	class DivinePunishmentPunish implements Command {
@@ -160,7 +165,7 @@ public class DivinePunishmentCommand implements Command {
 		@Override
 		public void action(CommandSet s, MDCBot b) {
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
-			String reason = s.getMessageReceivedEvent().getMessage().getContent().replace("--divine punishment " + s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0).getName() + " ", "");
+			String reason = s.getMessageReceivedEvent().getMessage().getContent().trim().replace("--divine punishment @" + s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0).getName() + "", "");
 			for(Trial t : trialedUsers) {
 				if(t.target.getIdLong() == target.getIdLong()) {
 					b.sendMessage(s.getTextChannel(), "Target is already up for trial");
@@ -248,6 +253,10 @@ public class DivinePunishmentCommand implements Command {
 			this.reason = reason;
 			this.bot = bot;
 			this.channel = channel;
+		}
+		
+		public String toString() {
+			return this.god.getName() + "  " + this.target.getName() + "  " + this.reason + "  BOT xD" + " CHANNEL";
 		}
 	}
 }
