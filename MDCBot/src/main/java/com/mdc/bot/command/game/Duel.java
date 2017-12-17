@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import com.mdc.bot.MDCBot;
 import com.mdc.bot.util.Util;
@@ -218,6 +219,18 @@ public class Duel {
 		d.getBot().invokeEvent(dde);
 		return removed;
 		//Done
+	}
+	
+	public static Duel[] getPendingDuelsWithUser(User u) {
+		List<Duel> duelsWUser = new Stack<Duel>();
+		for(Duel d : Duel.pendingDuels) {
+			if(d.getPlayer1().getUserId() == u.getIdLong() || d.getPlayer2().getUserId() == u.getIdLong()) {
+				duelsWUser.add(d);
+			}
+		}
+		Duel[] dools = new Duel[duelsWUser.size()];
+		dools = duelsWUser.toArray(dools);
+		return dools;
 	}
 	
 	public static Duel getPendingDuelWithUsers(User u1, User u2) {
