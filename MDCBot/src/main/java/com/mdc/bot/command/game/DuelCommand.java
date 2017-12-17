@@ -12,6 +12,12 @@ import net.dv8tion.jda.core.entities.User;
 
 public class DuelCommand implements Command {
 
+	private final Command[] children;
+	
+	public DuelCommand() {
+		children = new Command[] {new DuelStatusCommand(this)};
+	}
+	
 	@Override
 	public boolean called(CommandSet s, MDCBot b) {
 		//This is a challenge or an attack
@@ -48,7 +54,7 @@ public class DuelCommand implements Command {
 				b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Couldn't find duel request."));
 				return false;
 			}
-		} else if(!s.getArgs()[0].equalsIgnoreCase("stats") && s.getArgs().length >= 1 && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1) {
+		} else if(!s.getArgs()[0].equalsIgnoreCase("stats") && !s.getArgs()[0].equalsIgnoreCase("status") && s.getArgs().length >= 1 && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1) {
 			try {
 				User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 				User initiator = s.getSender();
@@ -73,8 +79,16 @@ public class DuelCommand implements Command {
 		} else if (s.getArgs()[0].equalsIgnoreCase("stats")) {
 			return true;
 		}
-		
-		
+		String[] newArgs = new String[s.getArgs().length-1];
+		for(int i = 0; i < newArgs.length; i++) {
+			newArgs[i] = s.getArgs()[i+1];
+		}
+		for(Command c : children) {
+			CommandSet cs = new CommandSet(s.getArgs()[0], newArgs, c, s.getMessageReceivedEvent());
+			if(c.called(cs, b)) {
+				return true;
+			}
+		}
 	
 		return false;
 	}
@@ -114,7 +128,7 @@ public class DuelCommand implements Command {
 			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			Duel.playerRejectedDuel(u, s.getSender(), b);
 			b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), new MessageBuilder().append("Duel rejected"));
-		} else if (!s.getArgs()[0].equalsIgnoreCase("stats")) {
+		} else if (!s.getArgs()[0].equalsIgnoreCase("stats") && !s.getArgs()[0].equalsIgnoreCase("status")) {
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			User initiator = s.getSender();
 			FightPlayer p1 = FightPlayer.getFightPlayer(target);
@@ -127,6 +141,17 @@ public class DuelCommand implements Command {
 			b.invokeEvent(dre);
 			
 		} else {
+			String[] newArgs = new String[s.getArgs().length-1];
+			for(int i = 0; i < newArgs.length; i++) {
+				newArgs[i] = s.getArgs()[i+1];
+			}
+			for(Command c : children) {
+				CommandSet cs = new CommandSet(s.getArgs()[0], newArgs, c, s.getMessageReceivedEvent());
+				if(c.called(cs, b)) {
+					c.action(cs, b);
+					return;
+				}
+			}
 			if(s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 0) {
 				//Get self stats
 				long userId = s.getSender().getIdLong();
@@ -141,7 +166,7 @@ public class DuelCommand implements Command {
 			}
 		}
 		
-	
+		
 	}
 
 	@Override
@@ -149,6 +174,85 @@ public class DuelCommand implements Command {
 		return "Help at: `--duel help`";
 	}
 
+	@Override
+	public Command[] getChildCommands() {
+		return children;
+	}
+
+
+	@Override
+	public boolean isRootCommand() {
+		return getParentCommand() == this;
+	}
+
+	@Override
+	public Command getParentCommand() {
+		return this;
+	}
 	
+	class DuelStatusCommand implements Command {
+		private Command parent;
+		
+		public DuelStatusCommand(DuelCommand d) {
+			parent = d;
+		}
+		
+		@Override
+		public boolean called(CommandSet s, MDCBot b) {
+			if(s.getLabel().equalsIgnoreCase("status")) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public void action(CommandSet s, MDCBot b) {
+			String output = "";
+			User target;
+			if(s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() != 0) {
+				target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
+			} else {
+				target = s.getSender();
+			}
+			output+="Duel status for " + target.getAsMention() + "\n";
+			if(Duel.isPlayerInActiveDuel(target)) {
+				Duel d = Duel.getDuelWithPlayer(FightPlayer.getFightPlayer(target));
+				output+="In a duel: " + d.getPlayer1().getUser().getAsMention() + " vs. " + d.getPlayer2().getUser().getAsMention() + "\n";
+				output+=d.getPlayer1().getUser().getAsMention() + " health: " + d.getPlayer1().getHP() + "\n";
+				output+=d.getPlayer2().getUser().getAsMention() + " health: " + d.getPlayer2().getHP() + "\n";
+				output+="Current turn: " + d.getCurrentAttacker().getUser().getAsMention() + "\n";
+			} else if (Duel.getPendingDuelsWithUser(target).length != 0) {
+				Duel[] duels = Duel.getPendingDuelsWithUser(target);
+				output+=target.getAsMention() + " is in pending duel(s)" + "\n";
+				for(Duel d : duels) {
+					output+="\nDuel with " + d.getPlayer1().getUser().getAsMention() + " and " + d.getPlayer2().getUser().getAsMention() + "\n";
+				}
+			} else {
+				output+=target.getAsMention() + " is not currently in any active or pending duels";
+			}
+			b.sendMessage(s.getTextChannel(), output);
+		}
+
+		@Override
+		public String getHelpMessage() {
+			return "";
+		}
+
+		@Override
+		public Command[] getChildCommands() {
+			return new Command[0];
+		}
+
+		@Override
+		public boolean isRootCommand() {
+			return false;
+		}
+
+		@Override
+		public Command getParentCommand() {
+			return parent;
+		}
+		
+	}
 	
 }

@@ -1,10 +1,9 @@
 package com.mdc.bot.command.game;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,8 +12,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import com.mdc.bot.MDCBot;
+import com.mdc.bot.util.MDCUser;
+import com.mdc.bot.util.StatCollection;
 import com.mdc.bot.util.Util;
 import com.mdc.bot.util.event.DuelAttackEvent;
 import com.mdc.bot.util.event.DuelDisbandEvent;
@@ -178,7 +180,8 @@ public class Duel {
 		winnerStats.streak++;
 		loserStats.losses++;
 		loserStats.streak=0;
-		Duel.saveStats();
+		Duel.saveStats(winner.getUser(), winnerStats);
+		Duel.saveStats(loser.getUser(), loserStats);
 	}
 	
 	public MDCBot getBot() {
@@ -218,6 +221,18 @@ public class Duel {
 		d.getBot().invokeEvent(dde);
 		return removed;
 		//Done
+	}
+	
+	public static Duel[] getPendingDuelsWithUser(User u) {
+		List<Duel> duelsWUser = new Stack<Duel>();
+		for(Duel d : Duel.pendingDuels) {
+			if(d.getPlayer1().getUserId() == u.getIdLong() || d.getPlayer2().getUserId() == u.getIdLong()) {
+				duelsWUser.add(d);
+			}
+		}
+		Duel[] dools = new Duel[duelsWUser.size()];
+		dools = duelsWUser.toArray(dools);
+		return dools;
 	}
 	
 	public static Duel getPendingDuelWithUsers(User u1, User u2) {
@@ -266,7 +281,7 @@ public class Duel {
 		//Anyone can quit if they want, it's fine
 	}
 	
-	
+	@Deprecated
 	public static void loadStats() {
 		File f = new File(Util.BOT_PATH + "/Duel/stats/");
 		Duel.duelStats = new HashMap<Long,Stats>();
@@ -303,34 +318,38 @@ public class Duel {
 	}
 	
 	public static Stats getStats(long user) {
-		Stats s = Duel.duelStats.get(user);
-		if(s == null) {
-			s = new Stats();
-			Duel.duelStats.put(user,s);;
-			return s;
+		MDCUser mdcU = MDCUser.getMDCUser(user);
+		if(mdcU.getStats("duels") == null) {
+			System.out.println("sigh");
+			StatCollection sc = new StatCollection("duels");
+			sc.setStat("wins", 0);
+			sc.setStat("losses", 0);
+			sc.setStat("streak", 0);
+			mdcU.addStatCollection(sc);
 		}
+		return statCollToStats(mdcU.getStats("duels"));
+	}
+	
+	private static Stats statCollToStats(StatCollection sc) {
+		Stats s = new Stats();
+		s.wins = sc.getStatMap().get("wins");
+		s.losses = sc.getStatMap().get("losses");
+		s.streak = sc.getStatMap().get("streak");
 		return s;
 	}
 	
-	public static void saveStats() {
-		File f = new File(Util.BOT_PATH + "/Duel/stats/");
-		if(!f.exists()) f.mkdirs();
-		try {
-			for (long user : Duel.duelStats.keySet()) {
-				File userFile = new File(Util.BOT_PATH + "/Duel/stats/" + user + ".dsts");
-				if(!userFile.exists()) userFile.createNewFile();
-				BufferedWriter bw = new BufferedWriter(new FileWriter(userFile));
-				Stats stats = Duel.getStats(user);
-				if(stats != null) {
-					String line = user + ":" + stats.wins + ":" + stats.losses + ":" + stats.streak;
-					bw.write(line);
-					bw.flush();
-				}
-				bw.close();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+	public static void saveStats(User u, Stats s) {
+		MDCUser mdcU = MDCUser.getMDCUser(u.getIdLong());
+		if(mdcU.getStats("duels") == null) {
+			StatCollection duelStatColl = new StatCollection("duels");
+			mdcU.addStatCollection(duelStatColl);
 		}
+		System.out.println(s.wins + "  " + s.losses + "   " + s.streak + "  EYEET");
+		StatCollection duelStatColl = mdcU.getStats("duels");
+		duelStatColl.setStat("wins", s.wins);
+		duelStatColl.setStat("losses", s.losses);
+		duelStatColl.setStat("streak", s.streak);
+		mdcU.saveUser();
 	}
 	
 	static class Stats {
