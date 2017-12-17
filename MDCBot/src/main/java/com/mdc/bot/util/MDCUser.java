@@ -1,6 +1,7 @@
 package com.mdc.bot.util;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,9 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.HashMap;
+import java.util.Map;
 /**
  * The intention of this class is to store all custom information about the user. Duel stats, updanks, and whatever future stats we add.
  * @author xDest
@@ -25,11 +25,11 @@ public class MDCUser implements Serializable {
 
 	private final long userId;
 	
-	private Set<StatCollection> stats;
+	private Map<String,StatCollection> stats;
 	
 	private MDCUser(long userId) {
 		this.userId = userId;
-		this.stats = new HashSet<StatCollection>();
+		this.stats = new HashMap<String,StatCollection>();
 	}
 	
 	/**
@@ -38,20 +38,20 @@ public class MDCUser implements Serializable {
 	 * @return A StatCollection, or null
 	 */
 	public StatCollection getStats(String name) {
-		for(StatCollection s : stats) {
-			if(s.getName().equals(name)) {
-				return s;
+		for(String s : stats.keySet()) {
+			if(s.equals(name)) {
+				return stats.get(s);
 			}
 		}
 		return null;
 	}
 	
-	public Set<StatCollection> getAllStats() {
+	public Map<String,StatCollection> getAllStats() {
 		return stats;
 	}
 
 	public void addStatCollection(StatCollection sc) {
-		this.stats.add(sc);
+		this.stats.put(sc.getName(),sc);
 	}
 	
 	/**
