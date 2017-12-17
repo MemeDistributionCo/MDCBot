@@ -14,26 +14,23 @@ public class DivinePunishmentCommand implements Command {
 	private final Command[] children;
 	private static Queue<Trial> trialedUsers = new LinkedList<Trial>();
 	private static Thread trialWatcher;
+	private static Runnable trialHandler;
 	private static boolean trialActive = false, objectionOccured = false;
 	
 	public DivinePunishmentCommand() {
-		if(trialWatcher == null) {
-			trialWatcher = new Thread(new Runnable() {
+		if(trialHandler == null) {
+			trialHandler = new Runnable() {
 				@Override
 				public void run() {
-					while(true) {
-						if(trialedUsers.size() > 0) {
+					while(trialedUsers.size() > 0) {
 							Trial x = trialedUsers.poll();
-							System.out.println(x + " ||||| Started");
 							if(x == null) continue;
 							startTrial(x);
 							awaitObjections(System.nanoTime());
 							endTrial(x);
-						}
 					}
 				}
-			});
-			trialWatcher.start();
+			};
 		}
 		children = new Command[] {new DivinePunishmentPunish(this), new DivineObjectionCommand(this)};
 	}
@@ -58,9 +55,6 @@ public class DivinePunishmentCommand implements Command {
 		String[] newArgs = new String[s.getArgs().length-1];
 		for(int i = 0; i < newArgs.length; i++) {
 			newArgs[i] = s.getArgs()[i+1];
-		}
-		for(Trial t : trialedUsers) {
-			System.out.print(t + "  ");
 		}
 		for(Command c : children) {
 			CommandSet cs = new CommandSet(s.getArgs()[0], newArgs, c, s.getMessageReceivedEvent());
@@ -173,6 +167,10 @@ public class DivinePunishmentCommand implements Command {
 				}
 			}
 			trialedUsers.add(new Trial(target, s.getSender(), reason, b, s.getTextChannel()));
+			if(trialWatcher == null || !trialWatcher.isAlive()) {
+				trialWatcher = new Thread(trialHandler);
+				trialWatcher.start();
+			}
 		}
 
 		@Override
