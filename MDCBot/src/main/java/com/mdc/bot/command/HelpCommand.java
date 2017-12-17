@@ -48,5 +48,21 @@ public class HelpCommand implements Command {
 		// TODO Auto-generated method stub
 		return "`--help <command name>`";
 	}
+	
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
+	
+	@Override
+	public boolean isRootCommand() {
+		return getParentCommand() == this;
+	}
+
+	@Override
+	public Command getParentCommand() {
+		return this;
+	}
+	
 
 }

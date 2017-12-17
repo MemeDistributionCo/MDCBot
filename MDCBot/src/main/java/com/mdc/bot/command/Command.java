@@ -25,6 +25,25 @@ public interface Command {
 	
 	
 	/**
+	 * Get all child commands of this command. Ex /duel *accept* @user, accept is the child.
+	 * @return Sub-commands of this command
+	 */
+	public Command[] getChildCommands();
+	
+	/**
+	 * Tells whether this is the top level of a command tree
+	 * @return true, if there are is no parent command
+	 */
+	public boolean isRootCommand();
+	
+	
+	/**
+	 * Get the parent command, if it exists. 
+	 * @return The parent command, itself otherwise
+	 */
+	public Command getParentCommand();
+	
+	/**
 	 * Parse text for command, return the command given or null if no command
 	 * @param message Discord message content
 	 * @return Command or null

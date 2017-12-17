@@ -38,4 +38,19 @@ public class HelloCommand implements Command {
 		return help;
 	}
 
+	@Override
+	public Command[] getChildCommands() {
+		return new Command[0];
+	}
+	
+	@Override
+	public boolean isRootCommand() {
+		return getParentCommand() == this;
+	}
+
+	@Override
+	public Command getParentCommand() {
+		return this;
+	}
+	
 }
