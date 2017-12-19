@@ -22,6 +22,7 @@ All commands start with `--`
 * timeout || Used to send players to timeout (Using the 'timeout' role)
 * divine || Allows for --divine punishment || and --divine objection
 * updank || Allows to check someones updank count with --updank @user
+* version || Use --verison to check the current bot version
 
 #### Reactions:
 * Reacts to anyone who sends :thecool: with :thecool:
