@@ -15,6 +15,11 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
+/**
+ * Timeout command for timeout votes
+ * @author xDestx
+ *
+ */
 public class TimeoutCommand implements Command {
 
 	private static Set<User> timeCool = new HashSet<User>();
@@ -94,7 +99,11 @@ public class TimeoutCommand implements Command {
 		return "Usage: `--timeout @user` to participate or create a vote to send a user to timeout. The vote will last 30 seconds, 68% of the online members need to participate. Using this command means you are voting **to send the person to timeout**. Timeout lasts 15 minutes and the user is free from being voted on for 24 hours after.\n"
 				+ "\n`--timeout roll` used to roll when a user is in timeout. Rolling a 15 or better will free you.";
 	}
-	
+	/**
+	 * Timeout vote class for holding votes
+	 * @author xDestx
+	 *
+	 */
 	static class TimeoutVote {
 		private Set<User> voters;
 		private TextChannel c;
@@ -103,6 +112,14 @@ public class TimeoutCommand implements Command {
 		private Guild s;
 		private int onlineMembers;
 		
+		/**
+		 * Create a new Timeout vote
+		 * @param target The user to send to timeout
+		 * @param c The channel for the vote
+		 * @param b The bot instance
+		 * @param s The server instance
+		 * @param voteCreator The user who created the vote
+		 */
 		public TimeoutVote(Member target, TextChannel c, MDCBot b, Guild s, User voteCreator) {
 			voters = new HashSet<User>();
 			this.target = target;
@@ -118,16 +135,26 @@ public class TimeoutCommand implements Command {
 			vote(voteCreator);
 		}
 		
+		/**
+		 * Have a user issue a vote. Uses a map, so a user cannot vote more than once.
+		 * @param u The user
+		 */
 		public void vote(User u) {
 			voters.add(u);
 			b.sendMessage(c, u.getAsMention() + " just voted! The total is " + getVoteCount());
 		}
 		
+		/**
+		 * Get the vote count of the current vote.
+		 * @return the vote count currently
+		 */
 		public int getVoteCount() {
 			return voters.size();
 		}
 		
-		
+		/**
+		 * End the vote and decide on whether the user has been sent away. Needs a >68% vote to pass. (~2/3)
+		 */
 		public void evaluate() {
 			float percent = (float)voters.size()/onlineMembers;
 			if(percent > 0.68f) {

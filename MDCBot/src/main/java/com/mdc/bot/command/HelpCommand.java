@@ -3,7 +3,11 @@ package com.mdc.bot.command;
 import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.MessageBuilder;
-
+/**
+ * Help command displays help text of given commands
+ * @author xDestx
+ *
+ */
 public class HelpCommand implements Command {
 
 	@Override

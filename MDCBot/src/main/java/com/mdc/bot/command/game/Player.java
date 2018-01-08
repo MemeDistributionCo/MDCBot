@@ -11,7 +11,7 @@ public interface Player {
 
 	/**
 	 * Get the {@link net.dv8tion.jda.core.entities.User User} for this {@link Player}.
-	 * @return
+	 * @return The user instance
 	 */
 	public User getUser();
 	/**

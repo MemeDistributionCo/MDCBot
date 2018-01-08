@@ -24,6 +24,10 @@ public class TokenNotFoundException extends Exception {
 		this.filePath = filePath;
 	}
 	
+	/**
+	 * Get the token path
+	 * @return The path
+	 */
 	public final String getTokenPath() {
 		return this.filePath;
 	}

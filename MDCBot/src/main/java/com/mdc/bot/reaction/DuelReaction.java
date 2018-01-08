@@ -17,7 +17,10 @@ import com.mdc.bot.util.event.RListener;
 public class DuelReaction extends Reaction implements RListener {
 
 	private Duel currentDuel;
-	
+	/**
+	 * Reaction super constructor
+	 * @param b The MDCBot instance
+	 */
 	public DuelReaction(MDCBot b) {
 		super(b);
 		currentDuel = null;
@@ -25,7 +28,7 @@ public class DuelReaction extends Reaction implements RListener {
 	
 	/**
 	 * Respond to duel request and attack.
-	 * @param e
+	 * @param e Duel request event
 	 */
 	public void onDuelRequest(DuelRequestEvent e) {
 		//Accept duel
@@ -39,7 +42,7 @@ public class DuelReaction extends Reaction implements RListener {
 	
 	/**
 	 * Respond to duel attack
-	 * @param e
+	 * @param e Duel attack event
 	 */
 	public void onDuelAttack(DuelAttackEvent e) {
 		if(e.getDuel() != currentDuel) return;
@@ -60,7 +63,8 @@ public class DuelReaction extends Reaction implements RListener {
 	}
 	
 	/**
-	 * 
+	 * Say GG at duel end
+	 * @param e Duel end event
 	 */
 	public void onDuelDisband(DuelDisbandEvent e) {
 		if(e.getDuel() == currentDuel) {

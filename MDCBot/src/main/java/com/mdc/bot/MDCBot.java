@@ -23,6 +23,11 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
+/**
+ * MDCBot Wrapper class. This class is the entire bot, and should be used for interaction.
+ * @author xDestx
+ *
+ */
 public class MDCBot {
 	
 	
@@ -42,11 +47,7 @@ public class MDCBot {
 		private final ScheduledExecutorService scheduler;
 		/**
 		 * Attempts to construct a Bot with the provided token.
-		 * @param token Token
-		 * @throws LoginException
-		 * @throws IllegalArgumentException
-		 * @throws InterruptedException
-		 * @throws RateLimitedException
+		 * @param token Bot Token
 		 */
 		public MDCBot(String token)  {
 			this.token = token;
@@ -80,12 +81,19 @@ public class MDCBot {
 		
 		/**
 		 * Get the custom event listener
-		 * @return
+		 * @return The event listener
 		 */
 		public CEventListener getCEventListener() {
 			return this.customListener;
 		}
 		
+		/**
+		 * Attempt to have the bot login.
+		 * @throws LoginException On login failure
+		 * @throws IllegalArgumentException On malformed token
+		 * @throws InterruptedException On net failure
+		 * @throws RateLimitedException On other failure (I apologize)
+		 */
 		public void login() throws LoginException,IllegalArgumentException,InterruptedException, RateLimitedException {
 			jdaInstance = new JDABuilder(AccountType.BOT).setToken(token).buildBlocking();
 			
@@ -104,30 +112,50 @@ public class MDCBot {
 			this.loggedIn = true;
 		}
 		
+		/**
+		 * Retrieve the bots token
+		 * @return The token
+		 */
 		public String getToken() {
 			return token;
 		}
 		
+		/**
+		 * Get the JDA Instance of the bot
+		 * @return The JDA instance
+		 */
 		public JDA getJDAInstance() {
 			return this.jdaInstance;
 		}
 		
+		/**
+		 * Set whether all bot messages should be TTS enabled
+		 * @param v True or False
+		 */
 		public void setTTS(boolean v) {
 			this.ttsEnabled = v;
 		}
 		
+		/**
+		 * Check whether the bot is currently TTS enabled
+		 * @return True if enabled, otherwise false
+		 */
 		public boolean isTTS() {
 			return this.ttsEnabled;
 		}
 		
+		/**
+		 * Check if the bot is currently logged in
+		 * @return true, if logged in. 
+		 */
 		public boolean isLoggedIn() {
 			return this.loggedIn;
 		}
 
 		/**
 		 * Sends a completed message to the text channel provided.
-		 * @param tc
-		 * @param message
+		 * @param tc The text channel
+		 * @param message The message builder message
 		 */
 		public void sendMessage(TextChannel tc, MessageBuilder message) {
 			message.setTTS(this.isTTS());
@@ -135,6 +163,11 @@ public class MDCBot {
 		}
 		
 		
+		/**
+		 * Sends a message to the specified text channel
+		 * @param tc The text channel
+		 * @param message The desired message
+		 */
 		public void sendMessage(TextChannel tc, String message) {
 			MessageBuilder mb = new MessageBuilder();
 			mb.setTTS(this.isTTS());
@@ -144,7 +177,7 @@ public class MDCBot {
 		
 		/**
 		 * Invoke a custom event
-		 * @param e
+		 * @param e The event
 		 */
 		public void invokeEvent(CEvent e) {
 			this.customListener.invokeEvent(e);
@@ -158,13 +191,20 @@ public class MDCBot {
 			return this.version;
 		}
 
-		
+		/**
+		 * Get the Bot scheduler
+		 * @return Scheduler instance
+		 */
 		public ScheduledExecutorService getScheduler() {
 			return scheduler;
 		}
 
-		//Version 2.0.0
+		//Version 2.3.0
 		
+		/**
+		 * Main method to run bot currently
+		 * @param args Args for bot (Not used)
+		 */
 		public static void main(String[] args) {
 			String token;
 			try {
