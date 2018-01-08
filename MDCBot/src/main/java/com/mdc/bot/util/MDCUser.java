@@ -1,7 +1,6 @@
 package com.mdc.bot.util;
 
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,12 +10,15 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.xdestx.json.JOk;
+import com.xdestx.json.JSONObject;
 /**
  * The intention of this class is to store all custom information about the user. Duel stats, updanks, and whatever future stats we add.
  * @author xDest
  *
  */
-public class MDCUser implements Serializable {
+public class MDCUser implements Serializable, JOk {
 
 	/**
 	 * 
@@ -124,6 +126,18 @@ public class MDCUser implements Serializable {
 			}
 		}
 		return searchedUser;
+	}
+
+	@Override
+	public String toJSONString() {
+		JSONObject thisObj = new JSONObject();
+		thisObj.put("userId", userId);
+		Map<String,JOk> mapBroke = new HashMap<String,JOk>();
+		for(String s : stats.keySet()) {
+			mapBroke.put(s, stats.get(s));
+		}
+		thisObj.put("stats", new JSONObject(mapBroke));
+		return thisObj.toJSONString();
 	}
 	
 	

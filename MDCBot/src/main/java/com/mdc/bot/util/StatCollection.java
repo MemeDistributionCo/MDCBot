@@ -4,12 +4,16 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.xdestx.json.JNumber;
+import com.xdestx.json.JOk;
+import com.xdestx.json.JSONObject;
+
 /**
  * Used to store stats for whatever needed.
  * @author xDest
  *
  */
-public class StatCollection implements Serializable {
+public class StatCollection implements Serializable, JOk {
 
 	/**
 	 * 
@@ -40,5 +44,18 @@ public class StatCollection implements Serializable {
 	
 	public void setStat(String newStat,Integer statVal) {
 		this.stats.put(newStat, statVal);
+	}
+
+	@Override
+	public String toJSONString() {
+		JSONObject thisObj = new JSONObject();
+		thisObj.put("name", this.name);
+		Map<String, JOk> newMap = new HashMap<String,JOk>();
+		for(String s : stats.keySet()) {
+			newMap.put(s, new JNumber(stats.get(s)));
+		}
+		thisObj.put("stats", new JSONObject(newMap));
+		
+		return thisObj.toJSONString();
 	}
 }
