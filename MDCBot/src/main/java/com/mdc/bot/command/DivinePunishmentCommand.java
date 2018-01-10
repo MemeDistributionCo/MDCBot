@@ -192,7 +192,7 @@ public class DivinePunishmentCommand implements Command {
 		@Override
 		public void action(CommandSet s, MDCBot b) {
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
-			String reason = s.getMessageReceivedEvent().getMessage().getContent().trim().replace("--divine punishment @" + s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0).getName() + "", "");
+			String reason = s.getMessageReceivedEvent().getMessage().getContent().trim().replace("--divine punishment @" + Util.getUserDisplayName(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0), s.getServer()) + "", "");
 			for(Trial t : trialedUsers) {
 				if(t.target.getIdLong() == target.getIdLong()) {
 					b.sendMessage(s.getTextChannel(), "Target is already up for trial");

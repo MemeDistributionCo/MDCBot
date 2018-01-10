@@ -174,7 +174,26 @@ public class Util {
 		List<Role> r = g.getRolesByName(roleName, true);
 		return gControl.removeRolesFromMember(mem, r);
 	}
+
 	
+	/**
+	 * Get the provided Users currently displayed name (Nickname).
+	 * @return The User's display name
+	 */
+	public static String getUserDisplayName(User u, Guild g) {
+		Member m = Util.userToMember(u, g);
+		return getUserDisplayName(m);
+	}
+	
+	/**
+	 * Retrieve the member's nickname ({@link Member#getNickname()}
+	 * @param m The member
+	 * @return Their nick name as a String
+	 */
+	public static String getUserDisplayName(Member m) {
+		return m.getNickname();
+	}
+
 	/**
 	 * Check whether a user has a role
 	 * @param u The user
@@ -182,6 +201,7 @@ public class Util {
 	 * @param g The server instance
 	 * @return true, if they have it
 	 */
+
 	public static boolean userHasRole(User u, String role, Guild g) {
 		Member m = Util.userToMember(u, g);
 		for(Role r : m.getRoles()) {
