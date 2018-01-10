@@ -175,7 +175,7 @@ public class DivinePunishmentCommand implements Command {
 
 		@Override
 		public String getHelpMessage() {
-			return "";
+			return "Usage: `--divine punishment @target`\nRequirements: God role\nSentences a user to timeout punishment with a 10 second grace period in which yourself or other Gods can use `--divine objection` in order to spare the target.";
 		}
 
 		@Override
@@ -220,7 +220,7 @@ public class DivinePunishmentCommand implements Command {
 
 		@Override
 		public String getHelpMessage() {
-			return "";
+			return "Usage: `--divine objection`\nCan only be used during a trial, guaranteed to save target from divine punishment. God role required.";
 		}
 
 		@Override
