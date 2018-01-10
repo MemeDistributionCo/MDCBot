@@ -38,7 +38,7 @@ public class MDCBot {
 		private boolean ttsEnabled;
 		private boolean loggedIn;
 		private CEventListener customListener;
-		private final String version = "2.3.0";
+		private final String version = "2.3.1";
 		private final ScheduledExecutorService scheduler;
 		/**
 		 * Attempts to construct a Bot with the provided token.
@@ -163,7 +163,7 @@ public class MDCBot {
 			return scheduler;
 		}
 
-		//Version 2.0.0
+		//Version 2.3.1
 		
 		public static void main(String[] args) {
 			String token;

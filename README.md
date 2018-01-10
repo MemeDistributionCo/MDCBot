@@ -2,11 +2,11 @@
 - Depends on JDA https://github.com/DV8FromTheWorld/JDA
 
 # Info
-Version: 2.3.0 u00
+Version: 2.3.1
 
 When working on the bot, please make a seperate branch for whatever thing you are trying to do. After completing, make a pull request for your branch into the testing-merge branch.
 
-### Version 2.3.0 u00:
+### Version 2.3.1:
 
 ##### Commands:
 All commands start with `--`
