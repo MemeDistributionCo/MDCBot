@@ -1,11 +1,19 @@
 package com.mdc.bot;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.security.auth.login.LoginException;
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
@@ -162,23 +170,40 @@ public class MDCBot {
 		public ScheduledExecutorService getScheduler() {
 			return scheduler;
 		}
+		
+		public void shutdown() {
+			shutdown(null);
+		}
+		
+		public void shutdown(TextChannel c) {
+			if(c!=null) sendMessage(c, "Au Revoir");
+			this.getJDAInstance().shutdown();
+			getScheduler().shutdownNow();
+		}
 
 		//Version 2.0.0
 		
+		private static MDCGui frame;
+		
 		public static void main(String[] args) {
+			frame = new MDCGui();
 			String token;
 			try {
 				token = Util.readToken();
 			} catch (IOException e) {
 				e.printStackTrace();
-				System.out.println("Could not read or write token file...");
+				//System.out.println("Could not read or write token file...");
+				frame.println("Could not read or write token file...");
 				System.exit(1);
 				return;
 			} catch (TokenNotFoundException e) {
-				System.out.println(e.getMessage());
-				System.out.println("Token file path: " + e.getTokenPath());
-				System.exit(1);
-				return;
+				//System.out.println(e.getMessage());
+				frame.println(e.getMessage());
+				//System.out.println("Token file path: " + e.getTokenPath());
+				frame.println("Token file path: " + e.getTokenPath());
+				//System.exit(1);
+				//return;
+				token = "";
 			}
 			
 			MDCBot newBot = new MDCBot(token);
@@ -187,10 +212,114 @@ public class MDCBot {
 				newBot.login();
 			} catch (LoginException | IllegalArgumentException | InterruptedException | RateLimitedException e) {
 				e.printStackTrace();
-				System.out.println("Unable to log in! Yikes! (Invalid token?)");
+				frame.println("Unable to log in! Yikes! (Invalid token?)");
+				//System.out.println("Unable to log in! Yikes! (Invalid token?)");
 			}
 			
 		}
 		
+		public static void print(String s) {
+			frame.print(s);
+		}
+		
+		public static void println(String s) {
+			frame.println(s);
+		}
+		
+		
+		static class MDCGui extends JFrame {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4037835942100275817L;
+			private JList<String> messageList;
+			private DefaultListModel<String> listModel;
+			private MDCBot bot;
+			
+			public MDCGui() {
+				setSize(1600/4*3,900/4*3); 
+				setResizable(false);
+				
+				listModel = new DefaultListModel<String>();
+				messageList = new JList<String>(listModel);
+				messageList.setSize(1600/4*3, 900/4*3);
+				messageList.setFixedCellHeight(30);
+				JScrollPane jsp = new JScrollPane(messageList);
+				jsp.setSize(1600/4*3,900/4*3);
+				add(jsp);
+				setVisible(true);
+				setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						if((e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_C) && e.isControlDown()) {
+							closeWindow();
+						}
+					}
+				});
+				bot = null;
+				jsp.addKeyListener(this.getKeyListeners()[0]);
+				messageList.addKeyListener(this.getKeyListeners()[0]);
+			}
+			
+			public MDCBot getBot() {
+				return bot;
+			}
+			
+			public void setBot(MDCBot b) {
+				this.bot = b;
+			}
+			
+			
+			public void closeWindow() {
+				//And bot
+				if(bot != null) {
+					bot.shutdown();
+				}
+				setVisible(false);
+				dispose();
+				System.exit(0);
+			}
+			
+			public void print(String s) {
+				List<String> toAppend = new ArrayList<String>();
+				String lastStr;
+				if(listModel.getSize() == 0) {
+					lastStr = getDate();
+				} else {
+					lastStr = listModel.getElementAt(listModel.getSize()-1);
+				}
+				if(s.split("\n").length > 0) {
+					lastStr+=s.split("\n")[0];
+					for(int i = 1; i < s.split("\n").length; i++) {
+						toAppend.add(getDate() + s.split("\n")[i]);
+					}
+				} else {
+					lastStr+=s;
+				}
+
+				if(listModel.getSize() != 0) {
+					listModel.set(listModel.getSize()-1, lastStr);
+				} else {
+					listModel.addElement(lastStr);
+				}
+				for(String str : toAppend) {
+					listModel.addElement(str);
+				}
+				System.out.print(s);
+			}
+			
+			public void println(String s) {
+				listModel.addElement(getDate() + s);
+				System.out.println(getDate() + s);
+			}
+			
+			public String getDate() {
+				return "[" + Calendar.getInstance().getTime().toString() + "]: ";
+			}
+			
+			
+		}
 	
 }
