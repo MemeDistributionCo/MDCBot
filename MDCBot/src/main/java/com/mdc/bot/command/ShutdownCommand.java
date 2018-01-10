@@ -9,6 +9,11 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
+/**
+ * Command to shutdown the bot
+ * @author xDestx
+ *
+ */
 public class ShutdownCommand implements Command {
 
 	@Override

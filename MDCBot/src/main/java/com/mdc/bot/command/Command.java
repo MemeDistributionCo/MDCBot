@@ -4,17 +4,24 @@ import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+/**
+ * Command interface for all commands under a single name.
+ * @author xDestx
+ *
+ */
 public interface Command {
 	public static final String COMMAND_PREFIX = "--";
 	/**
 	 * Used to verify whether a command is valid
-	 * @param args CommandSet for this command
+	 * @param s CommandSet for this command
+	 * @param b The bot
 	 * @return true, if valid command
 	 */
 	public boolean called(CommandSet s, MDCBot b);
 	/**
-	 * Used to run a command. Should be called after {@link #called(String[], MessageReceivedEvent)} returns true.
+	 * Used to run a command. Should be called after {@link #called(CommandSet, MDCBot)} returns true.
 	 * @param s CommandSet for this command
+	 * @param b The bot
 	 */
 	public void action(CommandSet s, MDCBot b);
 	/**
@@ -46,6 +53,7 @@ public interface Command {
 	/**
 	 * Parse text for command, return the command given or null if no command
 	 * @param message Discord message content
+	 * @param e The message event
 	 * @return Command or null
 	 */
 	public static CommandSet parseCommand(String message, MessageReceivedEvent e) {

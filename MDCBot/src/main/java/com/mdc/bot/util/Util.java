@@ -16,10 +16,23 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.managers.GuildController;
 import net.dv8tion.jda.core.requests.restaction.AuditableRestAction;
 
+/**
+ * Utility class for bot related things
+ * @author xDestx
+ *
+ */
 public class Util {
-
+	/**
+	 * The Bot data folder path
+	 */
 	public final static String BOT_PATH = System.getProperty("user.home") + File.separatorChar + "MDCBot";
+	/**
+	 * The bot settings folder path
+	 */
 	public final static String BOT_SETTINGS_PATH = BOT_PATH + File.separatorChar + "settings";
+	/**
+	 * The bot token path
+	 */
 	public final static String TOKEN_FILE_PATH = BOT_SETTINGS_PATH + File.separatorChar + "token.txt";
 	
 	/**
@@ -48,9 +61,9 @@ public class Util {
 	
 	/**
 	 * Compare two members to see if they are the same.
-	 * @param m1
-	 * @param m2
-	 * @return
+	 * @param m1 Member 1
+	 * @param m2 Member 2
+	 * @return true if they are the same member
 	 */
 	public static boolean sameMember(Member m1, Member m2) {
 		return Util.sameUser(m1.getUser(), m2.getUser());
@@ -58,9 +71,9 @@ public class Util {
 	
 	/**
 	 * Join together strings in an array while adding a space in between each element
-	 * @param s
-	 * @param startingIndex
-	 * @return
+	 * @param s String array
+	 * @param startingIndex start at specified position in array (0 for all strings in array)
+	 * @return A full string
 	 */
 	public static String joinStrings(String[] s, int startingIndex) {
 		if(startingIndex > s.length-1)
@@ -74,9 +87,9 @@ public class Util {
 	
 	/**
 	 * Retrieve a member from a guild by their id.
-	 * @param id
-	 * @param g
-	 * @return
+	 * @param id User id
+	 * @param g Server instance
+	 * @return The Member if it exists
 	 */
 	public static Member getMemberById(long id, Guild g) {
 		return g.getMemberById(id);
@@ -84,8 +97,8 @@ public class Util {
 	
 	/**
 	 * Check whether two users are the same
-	 * @param u1
-	 * @param u2
+	 * @param u1 User 1
+	 * @param u2 User 2
 	 * @return Whether they are the same
 	 */
 	public static boolean sameUser(User u1, User u2) {
@@ -96,9 +109,9 @@ public class Util {
 	
 	/**
 	 * Random value, inclusive on both ends
-	 * @param begin
-	 * @param end
-	 * @return
+	 * @param begin beginning value
+	 * @param end ending value
+	 * @return the random value
 	 */
 	public static int randVal(int begin, int end) {
 		return (int)(Math.random() * (end-begin+1)) + begin;
@@ -106,9 +119,9 @@ public class Util {
 	
 	/**
 	 * Attempts to read the token from the {@link com.mdc.bot.util.Util#TOKEN_FILE_PATH Token File}. If the file didn't exist previously, it is created and a {@link TokenNotFoundException} is thrown.
-	 * @return
-	 * @throws IOException
-	 * @throws TokenNotFoundException
+	 * @return A String of the token used for the bot
+	 * @throws IOException Failed IO action
+	 * @throws TokenNotFoundException Token file does not exist
 	 */
 	public static String readToken() throws IOException, TokenNotFoundException {
 		File tokenFolder = new File(Util.BOT_SETTINGS_PATH);
@@ -141,7 +154,7 @@ public class Util {
 	 * @param g The guild to check for role, member, etc.
 	 * @param mem The member to add role to
 	 * @param roleName The name of the role(s) to add
-	 * @return 
+	 * @return A rest action which needs to be <em>completed</em>
 	 */
 	public static AuditableRestAction<Void> addRolesToMember(Guild g, Member mem, String roleName) {
 		GuildController gControl = new GuildController(g);
@@ -154,7 +167,7 @@ public class Util {
 	 * @param g The guild to check for role, member, etc.
 	 * @param mem The member to add role to
 	 * @param roleName The name of the role(s) to add
-	 * @return 
+	 * @return A rest action which needs to me <em>completed</em>
 	 */
 	public static AuditableRestAction<Void> removeRolesFromMember(Guild g, Member mem, String roleName) {
 		GuildController gControl = new GuildController(g);
@@ -162,6 +175,13 @@ public class Util {
 		return gControl.removeRolesFromMember(mem, r);
 	}
 	
+	/**
+	 * Check whether a user has a role
+	 * @param u The user
+	 * @param role The role name
+	 * @param g The server instance
+	 * @return true, if they have it
+	 */
 	public static boolean userHasRole(User u, String role, Guild g) {
 		Member m = Util.userToMember(u, g);
 		for(Role r : m.getRoles()) {

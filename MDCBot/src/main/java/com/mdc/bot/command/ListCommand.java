@@ -4,6 +4,11 @@ import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.MessageBuilder;
 
+/**
+ * List Command which displays all possible commands
+ * @author xDestx
+ *
+ */
 public class ListCommand implements Command {
 
 	@Override

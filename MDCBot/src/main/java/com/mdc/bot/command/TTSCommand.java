@@ -7,6 +7,11 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 
+/**
+ * TTS Command to toggle or check TTS status of the bot
+ * @author xDestx
+ *
+ */
 public class TTSCommand implements Command {
 
 	@Override
