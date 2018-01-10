@@ -25,6 +25,11 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
+/**
+ * Duel executor class. Handles duels between two users.
+ * @author xDestx
+ *
+ */
 public class Duel {
 	
 	private static Set<Duel> activeDuels = new HashSet<Duel>();
@@ -39,10 +44,10 @@ public class Duel {
 	
 	/**
 	 * It is important to make the initiator the first player
-	 * @param initiator
-	 * @param requester
-	 * @param channel
-	 * @param b
+	 * @param initiator Duel initiator
+	 * @param requested Duel target
+	 * @param channel Duel channel
+	 * @param b The bot instance
 	 */
 	public Duel(FightPlayer initiator, FightPlayer requested, TextChannel channel, MDCBot b) {
 		this.p1 = initiator;
@@ -53,40 +58,72 @@ public class Duel {
 		pendingDuels.add(this);
 	}
 	
+	/**
+	 * The text channel for this duel
+	 * @return The channel
+	 */
 	public TextChannel getChannel() {
 		return this.channel;
 	}
 	
+	/**
+	 * Send the duel start message
+	 */
 	public void sendStartMessage() {
 		bot.sendMessage(channel, new MessageBuilder().append(getCurrentAttacker().getUser()).append(", it is your turn to attack."));
 	}
 	
+	/**
+	 * Switch turns and send message.
+	 */
 	public void incrementTurn() {
 		turn++;
 		turn = turn %2;
 		bot.sendMessage(channel, new MessageBuilder().append(getCurrentAttacker().getUser()).append(", it is your turn to attack."));
 	}
-	
+	/**
+	 * Get the first player (initiator)
+	 * @return The first player
+	 */
 	public FightPlayer getPlayer1() {
 		return p1;
 	}
-	
+	/**
+	 * Get the second player (target)
+	 * @return The second player
+	 */
 	public FightPlayer getPlayer2() {
 		return p2;
 	}
 	
+	/**
+	 * Get both players, player 1 first
+	 * @return An array containing player 1 and player 2
+	 */
 	public FightPlayer[] getPlayers() {
 		return new FightPlayer[] {p1,p2};
 	}
 	
+	/**
+	 * Get the current player who current can take their turn
+	 * @return The current acting player
+	 */
 	public FightPlayer getCurrentAttacker() {
 		return turn == 0 ? p1:p2;
 	}
 	
+	/**
+	 * Get the opposite of {@link #getCurrentAttacker()}
+	 * @return The defending player
+	 */
 	public FightPlayer getCurrentDefender() {
 		return turn == 0 ? p2:p1;
 	}
 	
+	/**
+	 * Have a player attempt an attack. If it is not their turn, cancel.
+	 * @param p Player attempting
+	 */
 	public void userTriedAttack(FightPlayer p) {
 		if(p != getCurrentAttacker()) {
 			MessageBuilder mb = new MessageBuilder();
@@ -164,6 +201,10 @@ public class Duel {
 		}
 	}
 	
+	/**
+	 * End the duel with the defeated player.
+	 * @param p The player defeated
+	 */
 	public void playerHasDied(FightPlayer p) {
 		if(p == p1 || p == p2) {
 			FightPlayer winner = p == p1 ? p2:p1;
@@ -183,11 +224,19 @@ public class Duel {
 		Duel.saveStats(winner.getUser(), winnerStats);
 		Duel.saveStats(loser.getUser(), loserStats);
 	}
-	
+	/**
+	 * Get the bot for this duel
+	 * @return The MDCBot
+	 */
 	public MDCBot getBot() {
 		return this.bot;
 	}
 	
+	/**
+	 * Retrieve a duel with a specified player if it exists.
+	 * @param p The player
+	 * @return A duel if it exists, null otherwise
+	 */
 	public static Duel getDuelWithPlayer(FightPlayer p) {
 		if(isPlayerInActiveDuel(p.getUser())) {
 			for(Duel d : activeDuels) {
@@ -199,10 +248,20 @@ public class Duel {
 		return null;
 	}
 	
+	/**
+	 * Check to see if a user is in this duel
+	 * @param u The user
+	 * @return True, if the user is a participant
+	 */
 	public boolean isPlayerInDuel(User u) {
 		return Util.sameUser(u, p1.getUser()) || Util.sameUser(u, p2.getUser());
 	}
 	
+	/**
+	 * Check if a user is currently active in a duel
+	 * @param p The user
+	 * @return true, if the user is in an active duel
+	 */
 	public static boolean isPlayerInActiveDuel(User p) {
 		for(Duel d : activeDuels) {
 			if(d.getPlayer1().getUser() == p || d.getPlayer2().getUser() == p) return true;
@@ -210,6 +269,11 @@ public class Duel {
 		return false;
 	}
 	
+	/**
+	 * Disband a duel, pending or active.
+	 * @param d The duel to disband
+	 * @return true, if successful
+	 */
 	public static boolean disbandDuel(Duel d) {
 		boolean removed = activeDuels.contains(d) || pendingDuels.contains(d);
 		activeDuels.remove(d);
@@ -223,6 +287,11 @@ public class Duel {
 		//Done
 	}
 	
+	/**
+	 * Get the duels that the user has pending.
+	 * @param u The user
+	 * @return A possibly empty array of Duels with the user specified.
+	 */
 	public static Duel[] getPendingDuelsWithUser(User u) {
 		List<Duel> duelsWUser = new Stack<Duel>();
 		for(Duel d : Duel.pendingDuels) {
@@ -235,6 +304,12 @@ public class Duel {
 		return dools;
 	}
 	
+	/**
+	 * Get the duel with both users specified. Order is not important
+	 * @param u1 The first user
+	 * @param u2 The second user
+	 * @return The duel in which bother users exist (pending duel)
+	 */
 	public static Duel getPendingDuelWithUsers(User u1, User u2) {
 		for(Duel d : Duel.pendingDuels) {
 			if(d.getPlayer1().getUser() == u1 || d.getPlayer1().getUser() == u2) {
@@ -246,6 +321,12 @@ public class Duel {
 		return null;
 	}
 	
+	/**
+	 * Attempt to start a duel between two users. Checks if the duel exists and whether it can be accepted.
+	 * @param targetDuelPartner The target duel partner
+	 * @param accepter The accepter
+	 * @return True, if the duel is started
+	 */
 	public static boolean playerAcceptedDuel(User targetDuelPartner, User accepter) {
 		Duel d = getPendingDuelWithUsers(targetDuelPartner,accepter);
 		//Accepter must be p2, or the requested user
@@ -271,6 +352,12 @@ public class Duel {
 		}
 	}
 	
+	/**
+	 * Have a user disband a duel with two users. Fails if there is no pending duel with both users
+	 * @param u1 User 1
+	 * @param u2 User 2
+	 * @param b The bot instance
+	 */
 	public static void playerRejectedDuel(User u1, User u2, MDCBot b) {
 		Duel d = getPendingDuelWithUsers(u1,u2);
 		if(d == null) {
@@ -281,6 +368,9 @@ public class Duel {
 		//Anyone can quit if they want, it's fine
 	}
 	
+	/**
+	 * Load old duel stats from the old duel stats directory. Stats are now stored in the {@link com.mdc.bot.util.MDCUser MDCUser} stat collection.
+	 */
 	@Deprecated
 	public static void loadStats() {
 		File f = new File(Util.BOT_PATH + "/Duel/stats/");
@@ -317,6 +407,11 @@ public class Duel {
 		}
 	}
 	
+	/**
+	 * Get stats for a user (Using {@link com.mdc.bot.util.MDCUser MDCUser} stats.
+	 * @param user The user id
+	 * @return The stats instance for duels
+	 */
 	public static Stats getStats(long user) {
 		MDCUser mdcU = MDCUser.getMDCUser(user);
 		if(mdcU.getStats("duels") == null) {
@@ -337,7 +432,11 @@ public class Duel {
 		s.streak = sc.getStatMap().get("streak");
 		return s;
 	}
-	
+	/**
+	 * Save the stats of a user with the specified duel stats
+	 * @param u The user
+	 * @param s The new {@link Stats}
+	 */
 	public static void saveStats(User u, Stats s) {
 		MDCUser mdcU = MDCUser.getMDCUser(u.getIdLong());
 		if(mdcU.getStats("duels") == null) {
@@ -352,9 +451,32 @@ public class Duel {
 		mdcU.saveUser();
 	}
 	
+	/**
+	 * Duel stats class specifically created for duels (old)
+	 * @author xDestx
+	 *
+	 */
 	static class Stats {
-		public int wins,losses,streak;
+		/**
+		 * The current win count
+		 */
+		public int wins;
+		/**
+		 * The current loss count
+		 */
+		public int losses;
+		/**
+		 * The current win streak
+		 */
+		public int streak;
+		/**
+		 * Default constructor with all components initialized to 0
+		 */
 		public Stats() {wins=losses=streak=0;}
+		/**
+		 * Constructor with wins as 0, losses as 1, and streak as 2
+		 * @param arr Array with stats (Size 3)
+		 */
 		public Stats(int[] arr) {
 			wins = arr[0];
 			losses = arr[1];

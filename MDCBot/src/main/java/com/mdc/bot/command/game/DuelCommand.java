@@ -10,10 +10,17 @@ import com.mdc.bot.util.event.DuelRequestEvent;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
 
+/**
+ * Duel command for handling duel actions
+ * @author xDestx
+ *
+ */
 public class DuelCommand implements Command {
 
 	private final Command[] children;
-	
+	/**
+	 * Create sub commands
+	 */
 	public DuelCommand() {
 		children = new Command[] {new DuelStatusCommand(this)};
 	}
@@ -190,9 +197,18 @@ public class DuelCommand implements Command {
 		return this;
 	}
 	
+	/**
+	 * Duel status sub command used to check status of a current user
+	 * @author xDestx
+	 *
+	 */
 	class DuelStatusCommand implements Command {
 		private Command parent;
 		
+		/**
+		 * Parent constructor
+		 * @param d The parent command
+		 */
 		public DuelStatusCommand(DuelCommand d) {
 			parent = d;
 		}

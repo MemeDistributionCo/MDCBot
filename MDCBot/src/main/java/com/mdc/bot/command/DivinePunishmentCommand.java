@@ -9,6 +9,11 @@ import com.mdc.bot.util.Util;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
+/**
+ * A command in which those with the God role can perform divine punishment upon another user. Read the wiki for more information.
+ * @author xDestx
+ *
+ */
 public class DivinePunishmentCommand implements Command {
 
 	private final Command[] children;
@@ -17,6 +22,9 @@ public class DivinePunishmentCommand implements Command {
 	private static Runnable trialHandler;
 	private static boolean trialActive = false, objectionOccured = false;
 	
+	/**
+	 * Creates a trial handler if it doesn't exist.
+	 */
 	public DivinePunishmentCommand() {
 		if(trialHandler == null) {
 			trialHandler = new Runnable() {
@@ -85,6 +93,10 @@ public class DivinePunishmentCommand implements Command {
 		return this;
 	}
 	
+	/**
+	 * Starts a {@link Trial}
+	 * @param t The Trial
+	 */
 	protected void startTrial(Trial t) {
 		trialActive = true;
 		String msg = "";
@@ -96,6 +108,10 @@ public class DivinePunishmentCommand implements Command {
 		t.bot.sendMessage(t.channel, msg);
 	}
 	
+	/**
+	 * Wait for objections (Trap, blocking)
+	 * @param startTime Time to wait
+	 */
 	protected void awaitObjections(long startTime) {
 		long timeWaited = 0;
 		while(timeWaited < 1e9*10) {
@@ -105,6 +121,10 @@ public class DivinePunishmentCommand implements Command {
 		}
 	}
 	
+	/**
+	 * End a trial
+	 * @param t The trial to end
+	 */
 	protected void endTrial(Trial t) {
 		if(objectionOccured) {
 			//Saved
@@ -133,6 +153,11 @@ public class DivinePunishmentCommand implements Command {
 		trialActive = false;
 	}
 	
+	/**
+	 * Implement punishment onto a user
+	 * @param t The trial associated
+	 * @param startTime The start time (delay)
+	 */
 	protected void punish(Trial t, long startTime) {
 		long timeWaited = 0;
 		while(timeWaited < 1e9*2) {
@@ -143,10 +168,18 @@ public class DivinePunishmentCommand implements Command {
 		Util.addRolesToMember(t.channel.getGuild(), Util.getMemberById(t.target.getIdLong(), t.channel.getGuild()), "timeout").complete();
 	}
 	
+	/**
+	 * DivinePunishment Punish sub command. Used to p u n i s h.
+	 * @author xDestx
+	 *
+	 */
 	class DivinePunishmentPunish implements Command {
 		
 		private final DivinePunishmentCommand parent;
-		
+		/**
+		 * Create a Punishment sub command with the parent command given.
+		 * @param parent Divine punishment parent
+		 */
 		public DivinePunishmentPunish(DivinePunishmentCommand parent) {
 			this.parent = parent;
 		}
@@ -195,11 +228,18 @@ public class DivinePunishmentCommand implements Command {
 		
 	}
 
-	
+	/**
+	 * Divine Object sub command to save those in need.
+	 * @author xDestx
+	 *
+	 */
 	class DivineObjectionCommand implements Command {
 		
 		private final DivinePunishmentCommand parent;
-
+		/**
+		 * Create a divine objection sub command with the provided parent
+		 * @param parent DivinePunishmentCommand 
+		 */
 		public DivineObjectionCommand(DivinePunishmentCommand parent) {
 			this.parent = parent;
 		}
@@ -240,11 +280,40 @@ public class DivinePunishmentCommand implements Command {
 		
 	}
 	
+	/**
+	 * Trial class to hold all pieces of a trial.
+	 * @author xDestx
+	 *
+	 */
 	class Trial {
-		public final User target, god;
+		/**
+		 * The target to punish
+		 */
+		public final User target, 
+		/**
+		 * The god issuing punishment
+		 */
+		god;
+		/**
+		 * The punishment reason
+		 */
 		public final String reason;
+		/**
+		 * The bot instance
+		 */
 		public final MDCBot bot;
+		/**
+		 * The trial channel
+		 */
 		public final TextChannel channel;
+		/**
+		 * Trial constructor
+		 * @param target The trial target
+		 * @param god The punishing god
+		 * @param reason The punishment reason
+		 * @param bot The bot instance
+		 * @param channel The trial channel
+		 */
 		public Trial(User target, User god, String reason, MDCBot bot, TextChannel channel) {
 			this.god = god;
 			this.target = target;
@@ -252,7 +321,9 @@ public class DivinePunishmentCommand implements Command {
 			this.bot = bot;
 			this.channel = channel;
 		}
-		
+		/**
+		 * To String implementation
+		 */
 		public String toString() {
 			return this.god.getName() + "  " + this.target.getName() + "  " + this.reason + "  BOT xD" + " CHANNEL";
 		}

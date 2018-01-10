@@ -4,6 +4,11 @@ import com.mdc.bot.MDCBot;
 import com.mdc.bot.util.MDCUser;
 import com.mdc.bot.util.StatCollection;
 
+/**
+ * Updank command to check a users updanks
+ * @author xDestx
+ *
+ */
 public class UpdankCommand implements Command {
 
 	@Override
