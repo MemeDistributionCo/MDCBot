@@ -33,7 +33,7 @@ public class UpdankCommand implements Command {
 
 	@Override
 	public String getHelpMessage() {
-		return "Shows the amount of updanks a user has.\nUsage: `--updank @user`";
+		return "Shows the amount of updanks a user has.\nUsage: `--updank @user`\nAward updanks by reacting to a message with :+1:";
 	}
 
 	@Override

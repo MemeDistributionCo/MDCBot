@@ -186,11 +186,18 @@ public class DivinePunishmentCommand implements Command {
 
 		@Override
 		public boolean called(CommandSet s, MDCBot b) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+				return true;
+			}
 			return s.getLabel().equals("punishment") && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1 && !(Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0),"God", s.getServer()) || Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0),"sd", s.getServer()));
 		}
 
 		@Override
 		public void action(CommandSet s, MDCBot b) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+				b.sendMessage(s.getTextChannel(), "`Divine Punishment`\nUsage: `--divine punishment <@user>`\nGod role required.");
+				return;
+			}
 			User target = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
 			String reason = s.getMessageReceivedEvent().getMessage().getContent().trim().replace("--divine punishment @" + Util.getUserDisplayName(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0), s.getServer()) + "", "");
 			for(Trial t : trialedUsers) {
@@ -208,7 +215,7 @@ public class DivinePunishmentCommand implements Command {
 
 		@Override
 		public String getHelpMessage() {
-			return "";
+			return "Usage: `--divine punishment @target`\nRequirements: God role\nSentences a user to timeout punishment with a 10 second grace period in which yourself or other Gods can use `--divine objection` in order to spare the target.";
 		}
 
 		@Override
@@ -246,6 +253,9 @@ public class DivinePunishmentCommand implements Command {
 		
 		@Override
 		public boolean called(CommandSet s, MDCBot b) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+				return true;
+			}
 			if(s.getLabel().equals("objection") && DivinePunishmentCommand.trialActive == true) {
 				return true;
 			}
@@ -254,13 +264,17 @@ public class DivinePunishmentCommand implements Command {
 
 		@Override
 		public void action(CommandSet s, MDCBot b) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+				b.sendMessage(s.getTextChannel(), "`Divine Objection`\nUsage: `--divine objection`\nGod role required.");
+				return;
+			}
 			DivinePunishmentCommand.objectionOccured = true;
 			b.sendMessage(s.getTextChannel(), "**O B J E C T I O N**");
 		}
 
 		@Override
 		public String getHelpMessage() {
-			return "";
+			return "Usage: `--divine objection`\nCan only be used during a trial, guaranteed to save target from divine punishment. God role required.";
 		}
 
 		@Override
