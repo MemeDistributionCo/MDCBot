@@ -178,6 +178,8 @@ public class Util {
 	
 	/**
 	 * Get the provided Users currently displayed name (Nickname).
+	 * @param g The guild for the user
+	 * @param u The user
 	 * @return The User's display name
 	 */
 	public static String getUserDisplayName(User u, Guild g) {
