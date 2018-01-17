@@ -189,6 +189,9 @@ public class DivinePunishmentCommand implements Command {
 			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
 				return true;
 			}
+			if (!(Util.userHasRole(s.getSender(), "God", s.getServer()) || Util.userHasRole(s.getSender(), "sd", s.getServer()))) {
+				return false;
+			}
 			return s.getLabel().equals("punishment") && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1 && !(Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0),"God", s.getServer()) || Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0),"sd", s.getServer()));
 		}
 
@@ -255,6 +258,9 @@ public class DivinePunishmentCommand implements Command {
 		public boolean called(CommandSet s, MDCBot b) {
 			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
 				return true;
+			}
+			if (!(Util.userHasRole(s.getSender(), "God", s.getServer()) || Util.userHasRole(s.getSender(), "sd", s.getServer()))) {
+				return false;
 			}
 			if(s.getLabel().equals("objection") && DivinePunishmentCommand.trialActive == true) {
 				return true;
