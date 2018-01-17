@@ -9,23 +9,35 @@ import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+/**
+ * Custom Event Listener Management class which listens for custom events as well as regular events and informs the registered listeners
+ * @author xDestx
+ *
+ */
 public class CEventListener extends ListenerAdapter {
 	
 	private MDCBot bot;
 	private List<RListener> registeredListeners;
-	
+	/**
+	 * Create a new listener manager instance with the current bot
+	 * @param b The bot
+	 */
 	public CEventListener(MDCBot b) { 
 		this.bot = b;
 		registeredListeners = new ArrayList<RListener>();
 	}
 	
+	/**
+	 * Get the bot for this listener manager
+	 * @return The bot
+	 */
 	public MDCBot getBot() {
 		return this.bot;
 	}
 	
 	/**
 	 * Register a listener. Only accepts {@link RListener} to prevent overlap.
-	 * @param r
+	 * @param r Custom Listener
 	 */
 	public void registerListener(RListener r) {
 		this.registeredListeners.add(r);
@@ -33,8 +45,8 @@ public class CEventListener extends ListenerAdapter {
 	
 	/**
 	 * Unregister a registered listener. Returns the listener on success, null on fail.
-	 * @param r
-	 * @return
+	 * @param r Custom Listener
+	 * @return The listener removed, or null if it doesn't exist.
 	 */
 	public RListener unregisterListener(RListener r) {
 		if(this.registeredListeners.remove(r)) return r;
@@ -43,7 +55,7 @@ public class CEventListener extends ListenerAdapter {
 	
 	/**
 	 * Invoke the CEvent, pass it to all listeners
-	 * @param e
+	 * @param e The custom event evoked
 	 */
 	public void invokeEvent(CEvent e) {
 		for(RListener r : registeredListeners) {

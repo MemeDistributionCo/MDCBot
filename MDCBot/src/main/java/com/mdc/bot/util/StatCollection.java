@@ -30,14 +30,27 @@ public class StatCollection implements Serializable {
 		this.stats = new HashMap<String,Integer>();
 	}
 	
+	/**
+	 * Get the map of individual stats
+	 * @return A map of integers mapped by strings
+	 */
 	public Map<String,Integer> getStatMap() {
 		return this.stats;
 	}
 	
+	/**
+	 * The collection name
+	 * @return A string of the collection name 
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Set a specific statistic
+	 * @param newStat New stat key
+	 * @param statVal New stat value
+	 */
 	public void setStat(String newStat,Integer statVal) {
 		this.stats.put(newStat, statVal);
 	}

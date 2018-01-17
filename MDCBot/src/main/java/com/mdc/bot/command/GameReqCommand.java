@@ -13,6 +13,11 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.requests.restaction.AuditableRestAction;
 
+/**
+ * Class to enlist, create, or delist from game notifications
+ * @author xDestx
+ *
+ */
 public class GameReqCommand implements Command {
 
 	@Override

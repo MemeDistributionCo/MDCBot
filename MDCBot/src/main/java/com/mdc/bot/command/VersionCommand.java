@@ -2,6 +2,11 @@ package com.mdc.bot.command;
 
 import com.mdc.bot.MDCBot;
 
+/**
+ * Command to get the bot version
+ * @author xDestx
+ *
+ */
 public class VersionCommand implements Command {
 
 	@Override
