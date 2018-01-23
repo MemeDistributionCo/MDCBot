@@ -36,11 +36,7 @@ public class ShutdownCommand implements Command {
 
 	@Override
 	public void action(CommandSet s, MDCBot b) {
-		MessageBuilder mb = new MessageBuilder();
-		mb.append("Au revoir ").append(s.getMessageReceivedEvent().getGuild().getEmotesByName("thecool", true).get(0));
-		b.sendMessage(s.getMessageReceivedEvent().getTextChannel(), mb);
-		s.getMessageReceivedEvent().getJDA().shutdown();
-		b.getScheduler().shutdownNow();
+		b.shutdown(s.getTextChannel());
 	}
 	
 	//I don't think the objects are equal so im making this to compare by id
