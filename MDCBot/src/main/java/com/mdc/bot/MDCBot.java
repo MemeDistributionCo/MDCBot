@@ -101,10 +101,18 @@ public class MDCBot {
 			enablePlugins();
 		}
 		
+		/**
+		 * Register a command with this bot
+		 * @param label The command label
+		 */
 		public void registerCommand(CommandLabel label) {
 			this.commands.add(label);
 		}
 		
+		/**
+		 * Unregister a command with this bot
+		 * @param label The command label
+		 */
 		public void unregisterCommand(CommandLabel label) {
 			this.commands.remove(label);
 		}
@@ -125,6 +133,10 @@ public class MDCBot {
 			registerCommand(new CommandLabel("divine",DivinePunishmentCommand.class));
 		}
 		
+		/**
+		 * Get all commands registered with this bot
+		 * @return An array of {@link com.mdc.bot.command.CommandLabel CommandLabels}
+		 */
 		public CommandLabel[] getCommandLabels() {
 			CommandLabel[] lbls = new CommandLabel[commands.size()];
 			lbls = commands.toArray(lbls);

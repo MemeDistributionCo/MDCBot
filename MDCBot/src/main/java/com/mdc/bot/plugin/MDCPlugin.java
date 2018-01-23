@@ -11,10 +11,12 @@ public interface MDCPlugin {
 	
 	/**
 	 * Enable the plugin
+	 * @param b The MDCBot
 	 */
 	void enable(MDCBot b);
 	/**
 	 * Disable the plugin
+	 * @param b The MDCBot
 	 */
 	void disable(MDCBot b);
 
