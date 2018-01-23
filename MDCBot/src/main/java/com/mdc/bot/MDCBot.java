@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -84,6 +86,7 @@ public class MDCBot {
 			jdaInstance = null;
 			this.loggedIn = false;
 			commands = new HashSet<CommandLabel>();
+			loadDefaultCommands();
 			customListener = new CEventListener(this);
 			/*
 			 * Register custom event listeners
@@ -297,7 +300,16 @@ public class MDCBot {
 								Object instance = loadedClass.newInstance();
 								if(instance instanceof MDCPlugin) {
 									MDCPlugin pl = (MDCPlugin)instance;
+									//Load the rest of the classes
 									plugins.add(pl);
+									
+									Enumeration<JarEntry> entries = jar.entries();
+									while(entries.hasMoreElements()) {
+										JarEntry entry = entries.nextElement();
+										if(entry.getName().endsWith(".class")) {
+											loader.loadClass(entry.getName().replace(".class","").replace(""+File.separatorChar,"."));
+										}
+									}
 								}
 							}
 						}

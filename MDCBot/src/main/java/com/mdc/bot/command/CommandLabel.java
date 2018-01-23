@@ -37,4 +37,10 @@ public class CommandLabel {
 		return this.commandClass;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "com.mdc.bot.command.CommandLabel label=\"" + getLabel() +"\" class=\"" + getCommandClass() + "\"";
+	}
+	
 }
