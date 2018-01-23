@@ -19,7 +19,7 @@ public class ListCommand implements Command {
 	@Override
 	public void action(CommandSet s, MDCBot bo) {
 		MessageBuilder b = new MessageBuilder().append("Commands: \n");
-		for(CommandLabel cl : CommandLabel.values()) {
+		for(CommandLabel cl : bo.getCommandLabels()) {
 			b.append("- " + cl.getLabel());
 			b.append("\n");
 		}

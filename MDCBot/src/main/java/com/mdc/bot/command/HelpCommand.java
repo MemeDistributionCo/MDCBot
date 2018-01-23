@@ -23,7 +23,7 @@ public class HelpCommand implements Command {
 		} else {
 			String commandName = s.getArgs()[0];
 			CommandLabel cl = null;
-			for(CommandLabel commandLabel : CommandLabel.values()) {
+			for(CommandLabel commandLabel : b.getCommandLabels()) {
 				if(commandLabel.getLabel().equalsIgnoreCase(commandName)) {
 					cl = commandLabel;
 					break;

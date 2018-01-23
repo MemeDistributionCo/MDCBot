@@ -16,6 +16,20 @@ import java.util.zip.ZipEntry;
 
 import javax.security.auth.login.LoginException;
 
+import com.mdc.bot.command.CommandLabel;
+import com.mdc.bot.command.CoolCommand;
+import com.mdc.bot.command.DivinePunishmentCommand;
+import com.mdc.bot.command.FSpeakCommand;
+import com.mdc.bot.command.GameReqCommand;
+import com.mdc.bot.command.HelloCommand;
+import com.mdc.bot.command.HelpCommand;
+import com.mdc.bot.command.ListCommand;
+import com.mdc.bot.command.ShutdownCommand;
+import com.mdc.bot.command.TTSCommand;
+import com.mdc.bot.command.TimeoutCommand;
+import com.mdc.bot.command.UpdankCommand;
+import com.mdc.bot.command.VersionCommand;
+import com.mdc.bot.command.game.DuelCommand;
 import com.mdc.bot.plugin.MDCPlugin;
 import com.mdc.bot.plugin.exception.PluginTXTNotFoundException;
 import com.mdc.bot.reaction.CoolReaction;
@@ -57,6 +71,8 @@ public class MDCBot {
 		private final String version = "2.3.2";
 		private final ScheduledExecutorService scheduler;
 		private final Set<MDCPlugin> plugins;
+		private final Set<CommandLabel> commands;
+		
 		
 		/**
 		 * Attempts to construct a Bot with the provided token.
@@ -67,6 +83,7 @@ public class MDCBot {
 			ttsEnabled = false;
 			jdaInstance = null;
 			this.loggedIn = false;
+			commands = new HashSet<CommandLabel>();
 			customListener = new CEventListener(this);
 			/*
 			 * Register custom event listeners
@@ -79,6 +96,36 @@ public class MDCBot {
 			plugins = new HashSet<MDCPlugin>();
 			loadPlugins();
 			enablePlugins();
+		}
+		
+		public void registerCommand(CommandLabel label) {
+			this.commands.add(label);
+		}
+		
+		public void unregisterCommand(CommandLabel label) {
+			this.commands.remove(label);
+		}
+		
+		protected void loadDefaultCommands() {
+			registerCommand(new CommandLabel("hello", HelloCommand.class));
+			registerCommand(new CommandLabel("shutdown",ShutdownCommand.class));
+			registerCommand(new CommandLabel("cool",CoolCommand.class));
+			registerCommand(new CommandLabel("tts",TTSCommand.class));
+			registerCommand(new CommandLabel("help",HelpCommand.class));
+			registerCommand(new CommandLabel("fspeak",FSpeakCommand.class));
+			registerCommand(new CommandLabel("commands",ListCommand.class));
+			registerCommand(new CommandLabel("duel",DuelCommand.class));
+			registerCommand(new CommandLabel("game",GameReqCommand.class));
+			registerCommand(new CommandLabel("version",VersionCommand.class));
+			registerCommand(new CommandLabel("timeout",TimeoutCommand.class));
+			registerCommand(new CommandLabel("updank",UpdankCommand.class));
+			registerCommand(new CommandLabel("divine",DivinePunishmentCommand.class));
+		}
+		
+		public CommandLabel[] getCommandLabels() {
+			CommandLabel[] lbls = new CommandLabel[commands.size()];
+			lbls = commands.toArray(lbls);
+			return lbls;
 		}
 		
 		/**
