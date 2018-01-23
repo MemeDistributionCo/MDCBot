@@ -1,12 +1,23 @@
 package com.mdc.bot;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 
 import javax.security.auth.login.LoginException;
 
+import com.mdc.bot.plugin.MDCPlugin;
+import com.mdc.bot.plugin.exception.PluginTXTNotFoundException;
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.reaction.UpdankReaction;
@@ -45,6 +56,8 @@ public class MDCBot {
 		private CEventListener customListener;
 		private final String version = "2.3.2";
 		private final ScheduledExecutorService scheduler;
+		private final Set<MDCPlugin> plugins;
+		
 		/**
 		 * Attempts to construct a Bot with the provided token.
 		 * @param token Bot Token
@@ -58,8 +71,14 @@ public class MDCBot {
 			/*
 			 * Register custom event listeners
 			 */
-			customListener.registerListener(new DuelReaction(this));
+			registerRListener(new DuelReaction(this));
 			scheduler = Executors.newScheduledThreadPool(10);
+			/*
+			 * Load plugins
+			 */
+			plugins = new HashSet<MDCPlugin>();
+			loadPlugins();
+			enablePlugins();
 		}
 		
 		/**
@@ -199,7 +218,89 @@ public class MDCBot {
 			return scheduler;
 		}
 
-		//Version 2.3.1
+		/**
+		 * Load plugins from the MDCBot/Plugins directory
+		 */
+		protected void loadPlugins() {
+			/*
+			 * Find plugins folder
+			 */
+			File f = new File(Util.BOT_PATH + File.separatorChar + "Plugins");
+			if(!f.exists()) {
+				f.mkdirs();
+			}
+			for(String fileName : f.list(new FilenameFilter() {@Override public boolean accept(File dir, String name) { return name.endsWith(".jar");}})) {
+				File possiblePlugin = new File(f.getPath() + File.separatorChar + fileName);
+				try {
+					JarFile jar = new JarFile(possiblePlugin);
+					ZipEntry pluginTxt = jar.getEntry("plugin.txt");
+					if(pluginTxt == null) {
+						jar.close();
+						throw new PluginTXTNotFoundException(fileName);
+					}
+					BufferedReader br = new BufferedReader(new InputStreamReader(jar.getInputStream(pluginTxt)));
+					String line = br.readLine();
+					if(line.contains("main:")) {
+						line = line.replace("main:", "").trim();
+						URL loc = possiblePlugin.toURI().toURL();
+						URLClassLoader loader = new URLClassLoader(new URL[] {loc});
+						Class<?> loadedClass = loader.loadClass(line);
+						for(Class<?> i : loadedClass.getInterfaces()) {
+							if(i.getName().equals("com.mdc.bot.plugin.MDCPlugin")) {
+								Object instance = loadedClass.newInstance();
+								if(instance instanceof MDCPlugin) {
+									MDCPlugin pl = (MDCPlugin)instance;
+									plugins.add(pl);
+								}
+							}
+						}
+						loader.close();
+					}
+					br.close();
+					jar.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (PluginTXTNotFoundException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		/**
+		 * Enable all loaded plugins in {@link #plugins}
+		 */
+		protected void enablePlugins() {
+			for(MDCPlugin p : plugins) {
+				p.enable(this);
+			}
+		}
+		
+		/**
+		 * Disable all loaded plugins in {@link #plugins}
+		 */
+		protected void disablePlugins() {
+			for(MDCPlugin p : plugins) {
+				p.disable(this);
+			}
+		}
+		
+		
+		public void shutdown() {
+			disablePlugins();
+			jdaInstance.shutdown();
+			getScheduler().shutdownNow();
+		}
+		
+		public void shutdown(TextChannel c) {
+			sendMessage(c,"Au Revoir");
+			shutdown();
+		}
 		
 		/**
 		 * Main method to run bot currently
