@@ -1,16 +1,18 @@
 package com.mdc.bot.util;
 
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 /**
  * The intention of this class is to store all custom information about the user. Duel stats, updanks, and whatever future stats we add.
  * @author xDest
@@ -134,7 +136,34 @@ public class MDCUser implements Serializable {
 		return searchedUser;
 	}
 	
+	public static Set<MDCUser> getAllMDCUsers() {
+		File userFolder = new File(Util.BOT_PATH + File.separatorChar + "MDCUsers");
+		FilenameFilter filter = new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".mdu");
+			}
+			
+		};
+		
+		Set<MDCUser> userSet = new HashSet<MDCUser>();
+		for(String f : userFolder.list(filter)) {
+			MDCUser user = MDCUser.getMDCUser(Long.parseLong(f.replace(".mdu", "")));
+			if(user == null) {
+				continue;
+			}
+			userSet.add(user);
+		}
+		return userSet;
+	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof MDCUser)) return false;
+		MDCUser u = (MDCUser)o;
+		return u.getUserId() == this.getUserId();
+	}
 	
 	
 }
