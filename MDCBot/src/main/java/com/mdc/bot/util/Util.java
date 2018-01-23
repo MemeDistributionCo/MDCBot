@@ -50,6 +50,16 @@ public class Util {
 	}
 	
 	/**
+	 * Get the User with the id
+	 * @param id The id of the user
+	 * @param g The guild
+	 * @return The user
+	 */
+	public static User getUserByID(long id, Guild g) {
+		return g.getMemberById(id).getUser();
+	}
+	
+	/**
 	 * Returns the Member from the Guild provided, assuming the user exists in it.
 	 * @param u The user
 	 * @param g The guild
