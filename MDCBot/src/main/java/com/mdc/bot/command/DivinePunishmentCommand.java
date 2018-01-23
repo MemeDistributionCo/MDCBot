@@ -40,7 +40,7 @@ public class DivinePunishmentCommand implements Command {
 				}
 			};
 		}
-		children = new Command[] {new DivinePunishmentPunish(this), new DivineObjectionCommand(this)};
+		children = new Command[] {new DivinePunishmentPunish(this), new DivineObjectionCommand(this), new DivineRevivalCommand(this)};
 	}
 	
 	@Override
@@ -186,8 +186,11 @@ public class DivinePunishmentCommand implements Command {
 
 		@Override
 		public boolean called(CommandSet s, MDCBot b) {
-			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?") && s.getLabel().equalsIgnoreCase("punishment")) {
 				return true;
+			}
+			if (!(Util.userHasRole(s.getSender(), "God", s.getServer()) || Util.userHasRole(s.getSender(), "sd", s.getServer()))) {
+				return false;
 			}
 			return s.getLabel().equals("punishment") && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() == 1 && !(Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0),"God", s.getServer()) || Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0),"sd", s.getServer()));
 		}
@@ -253,8 +256,11 @@ public class DivinePunishmentCommand implements Command {
 		
 		@Override
 		public boolean called(CommandSet s, MDCBot b) {
-			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?") && s.getLabel().equalsIgnoreCase("objection")) {
 				return true;
+			}
+			if (!(Util.userHasRole(s.getSender(), "God", s.getServer()) || Util.userHasRole(s.getSender(), "sd", s.getServer()))) {
+				return false;
 			}
 			if(s.getLabel().equals("objection") && DivinePunishmentCommand.trialActive == true) {
 				return true;
@@ -275,6 +281,69 @@ public class DivinePunishmentCommand implements Command {
 		@Override
 		public String getHelpMessage() {
 			return "Usage: `--divine objection`\nCan only be used during a trial, guaranteed to save target from divine punishment. God role required.";
+		}
+
+		@Override
+		public Command[] getChildCommands() {
+			return new Command[0];
+		}
+
+		@Override
+		public boolean isRootCommand() {
+			return false;
+		}
+
+		@Override
+		public Command getParentCommand() {
+			return parent;
+		}
+		
+	}
+	
+	/**
+	 * Divine Revival sub command to revive those in need.
+	 * @author xDestx
+	 *
+	 */
+	class DivineRevivalCommand implements Command {
+		
+		private final DivinePunishmentCommand parent;
+		/**
+		 * Create a divine objection sub command with the provided parent
+		 * @param parent DivinePunishmentCommand 
+		 */
+		public DivineRevivalCommand(DivinePunishmentCommand parent) {
+			this.parent = parent;
+		}
+		
+		@Override
+		public boolean called(CommandSet s, MDCBot b) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?") && s.getLabel().equalsIgnoreCase("revival")) {
+				return true;
+			}
+			if (!(Util.userHasRole(s.getSender(), "God", s.getServer()) || Util.userHasRole(s.getSender(), "sd", s.getServer()))) {
+				return false;
+			}
+			if(s.getLabel().equals("revival") && s.getArgs().length > 0 && s.getMessageReceivedEvent().getMessage().getMentionedUsers().size() > 0 && Util.userHasRole(s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0), "timeout", s.getServer())) {
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		public void action(CommandSet s, MDCBot b) {
+			if(s.getArgs().length > 0 && s.getArgs()[0].equals("?")) {
+				b.sendMessage(s.getTextChannel(), "`Divine Revival`\nUsage: `--divine revival <@user>`\nGod role required.");
+				return;
+			}
+			User u = s.getMessageReceivedEvent().getMessage().getMentionedUsers().get(0);
+			Util.removeRolesFromMember(s.getServer(), Util.getMemberById(u.getIdLong(), s.getServer()), "timeout").complete();
+			b.sendMessage(s.getTextChannel(), "The great " + s.getSender().getAsMention() + " has freed " + u.getAsMention() + "!");
+		}
+
+		@Override
+		public String getHelpMessage() {
+			return "Usage: `--divine revival`\nCan only be used on user with timeout, brings them back. God role required.";
 		}
 
 		@Override
