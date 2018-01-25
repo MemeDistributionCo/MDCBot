@@ -55,6 +55,17 @@ public class UpdankCommand implements Command {
 						top = u;
 					}
 					else {
+						if(!(top.getStats("updanks") != null && top.getStats("updanks").getStatMap().get("updanks") != null)){
+							top.addStatCollection(new StatCollection("updanks"));
+							top.getStats("updanks").setStat("updanks", 0);
+							
+						}
+						
+						if(!(u.getStats("updanks") != null && u.getStats("updanks").getStatMap().get("updanks") != null)) {
+							u.addStatCollection(new StatCollection("updanks"));
+							u.getStats("updanks").setStat("updanks", 0);
+							
+						}
 						if(top.getStats("updanks").getStatMap().get("updanks").intValue() < u.getStats("updanks").getStatMap().get("updanks").intValue()) {
 							//if top has less than this
 							top = u;
