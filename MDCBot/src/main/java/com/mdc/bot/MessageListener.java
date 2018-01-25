@@ -1,8 +1,8 @@
 package com.mdc.bot;
 
 import com.mdc.bot.command.Command;
-
 import com.mdc.bot.command.CommandSet;
+import com.mdc.bot.util.event.CommandSentEvent;
 
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -37,6 +37,7 @@ public class MessageListener extends ListenerAdapter {
 			if(c != null) {
 				if(c.getCommandInstance().called(c, bot)) {
 					c.getCommandInstance().action(c, bot);
+					bot.invokeEvent(new CommandSentEvent(c,e,bot));
 				} else {
 					//Malformed command
 				}

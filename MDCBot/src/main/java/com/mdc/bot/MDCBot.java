@@ -1,12 +1,12 @@
 package com.mdc.bot;
 
 import java.io.IOException;
-
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.security.auth.login.LoginException;
 
+import com.mdc.bot.reaction.CommandReaction;
 import com.mdc.bot.reaction.CoolReaction;
 import com.mdc.bot.reaction.DuelReaction;
 import com.mdc.bot.reaction.UpdankReaction;
@@ -43,7 +43,7 @@ public class MDCBot {
 		private boolean ttsEnabled;
 		private boolean loggedIn;
 		private CEventListener customListener;
-		private final String version = "2.3.2";
+		private final String version = "2.4.0";
 		private final ScheduledExecutorService scheduler;
 		/**
 		 * Attempts to construct a Bot with the provided token.
@@ -59,6 +59,7 @@ public class MDCBot {
 			 * Register custom event listeners
 			 */
 			customListener.registerListener(new DuelReaction(this));
+			customListener.registerListener(new CommandReaction());
 			scheduler = Executors.newScheduledThreadPool(10);
 		}
 		
@@ -199,6 +200,17 @@ public class MDCBot {
 			return scheduler;
 		}
 
+		
+		/**
+		 * Ask the bot if the command sent is one that should be deleted upon process
+		 * @param c The command class
+		 * @return true or false
+		 */
+		public boolean shouldDeleteCommand(Class<?> c) {
+			//TODO Config for what commands to delete
+			return true;
+		}
+		
 		//Version 2.3.1
 		
 		/**
