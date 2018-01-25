@@ -1,0 +1,10 @@
+package com.mdc.bot.util.hawk;
+
+/**
+ * Statistics applying to users
+ * @author xDest
+ *
+ */
+public enum HawkUserStatistic {
+	AVERAGE_MESSAGES_PER_DAY, AVERAGE_MESSAGES_PER_WEEK, FAVORITE_CHANNELS, FAVORITE_EMOJIS, FAVORITE_COMMANDS, AVERAGE_COMMANDS_PER_WEEK, AVERAGE_COMMANDS_PER_MONTH, AVERAGE_TIME_ONLINE_PER_WEEK;
+}
