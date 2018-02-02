@@ -2,13 +2,9 @@
 - Depends on JDA https://github.com/DV8FromTheWorld/JDA
 
 # Info
-Version: 2.3.2
-
-[Docs](https://memedistributionco.github.io/docs/MDCBot/)
+Version: 3.0.0
 
 When working on the bot, please make a seperate branch for whatever thing you are trying to do. After completing, make a pull request for your branch into the testing-merge branch.
-
-### Version 2.3.2:
 
 ##### Commands:
 All commands start with `--`
