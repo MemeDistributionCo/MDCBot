@@ -187,7 +187,7 @@ public class Util {
 
 	
 	/**
-	 * Get the provided Users currently displayed name (Nickname).
+	 * Get the provided Users currently displayed name (Effective name).
 	 * @param g The guild for the user
 	 * @param u The user
 	 * @return The User's display name
@@ -198,12 +198,12 @@ public class Util {
 	}
 	
 	/**
-	 * Retrieve the member's nickname ({@link Member#getNickname()}
+	 * Retrieve the member's effective name ({@link Member#getEffectiveName()()}
 	 * @param m The member
 	 * @return Their nick name as a String
 	 */
 	public static String getUserDisplayName(Member m) {
-		return m.getNickname();
+		return m.getEffectiveName();
 	}
 
 	/**
