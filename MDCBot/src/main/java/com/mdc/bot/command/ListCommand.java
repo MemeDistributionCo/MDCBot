@@ -4,6 +4,11 @@ import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.MessageBuilder;
 
+/**
+ * List Command which displays all possible commands
+ * @author xDestx
+ *
+ */
 public class ListCommand implements Command {
 
 	@Override
@@ -14,7 +19,7 @@ public class ListCommand implements Command {
 	@Override
 	public void action(CommandSet s, MDCBot bo) {
 		MessageBuilder b = new MessageBuilder().append("Commands: \n");
-		for(CommandLabel cl : CommandLabel.values()) {
+		for(CommandLabel cl : bo.getCommandLabels()) {
 			b.append("- " + cl.getLabel());
 			b.append("\n");
 		}

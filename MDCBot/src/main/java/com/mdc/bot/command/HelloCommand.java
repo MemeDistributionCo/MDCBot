@@ -4,10 +4,17 @@ import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.MessageBuilder;
 
+/**
+ * First command in the bot. Says hello with a mention.
+ * @author xDestx
+ *
+ */
 public class HelloCommand implements Command {
 
 	private String help;
-	
+	/**
+	 * Create help text
+	 */
 	public HelloCommand()
 	{
 		help = "Usage: `--hello`";

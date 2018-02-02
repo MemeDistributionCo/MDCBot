@@ -2,11 +2,9 @@
 - Depends on JDA https://github.com/DV8FromTheWorld/JDA
 
 # Info
-Version: 3.0.0 u00
+Version: 3.0.0
 
 When working on the bot, please make a seperate branch for whatever thing you are trying to do. After completing, make a pull request for your branch into the testing-merge branch.
-
-### Version 3.0.0 u00:
 
 ##### Commands:
 All commands start with `--`
@@ -22,6 +20,7 @@ All commands start with `--`
 * timeout || Used to send players to timeout (Using the 'timeout' role)
 * divine || Allows for --divine punishment || and --divine objection
 * updank || Allows to check someones updank count with --updank @user
+* version || Use --verison to check the current bot version
 
 #### Reactions:
 * Reacts to anyone who sends :thecool: with :thecool:

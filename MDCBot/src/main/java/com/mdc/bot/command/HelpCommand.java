@@ -3,7 +3,11 @@ package com.mdc.bot.command;
 import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.MessageBuilder;
-
+/**
+ * Help command displays help text of given commands
+ * @author xDestx
+ *
+ */
 public class HelpCommand implements Command {
 
 	@Override
@@ -19,7 +23,7 @@ public class HelpCommand implements Command {
 		} else {
 			String commandName = s.getArgs()[0];
 			CommandLabel cl = null;
-			for(CommandLabel commandLabel : CommandLabel.values()) {
+			for(CommandLabel commandLabel : b.getCommandLabels()) {
 				if(commandLabel.getLabel().equalsIgnoreCase(commandName)) {
 					cl = commandLabel;
 					break;

@@ -34,7 +34,7 @@ public class MDCUser implements Serializable {
 	
 	/**
 	 * Gets a StatCollection with the matching name. If it doesn't exist, returns null.
-	 * @param name
+	 * @param name The stat collection with this name
 	 * @return A StatCollection, or null
 	 */
 	public StatCollection getStats(String name) {
@@ -46,10 +46,18 @@ public class MDCUser implements Serializable {
 		return null;
 	}
 	
+	/**
+	 * Get a map of all the stat collections which this user has.
+	 * @return A Map&lt;String,StatCollection&gt; of stats 
+	 */
 	public Map<String,StatCollection> getAllStats() {
 		return stats;
 	}
 
+	/**
+	 * Ad a stat collection to the user stat map
+	 * @param sc The stat collection to add
+	 */
 	public void addStatCollection(StatCollection sc) {
 		this.stats.put(sc.getName(),sc);
 	}
@@ -95,7 +103,7 @@ public class MDCUser implements Serializable {
 	/**
 	 * Gets the MDCUser with the specified id.
 	 * @param userId The user id
-	 * @return The MDCUser=
+	 * @return The MDCUser
 	 */
 	public static MDCUser getMDCUser(long userId) {
 		File userFolder = new File(Util.BOT_PATH + File.separatorChar + "MDCUsers");

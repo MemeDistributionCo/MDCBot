@@ -4,7 +4,11 @@ import com.mdc.bot.MDCBot;
 
 import net.dv8tion.jda.core.MessageBuilder;
 
-
+/**
+ * A command to send a :thecool: emoji
+ * @author xDestx
+ *
+ */
 public class CoolCommand implements Command {
 
 	@Override

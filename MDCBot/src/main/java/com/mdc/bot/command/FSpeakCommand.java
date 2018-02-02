@@ -10,6 +10,11 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
+/**
+ * Send a message through the bot. Does not support mentions.
+ * @author xDestx
+ *
+ */
 public class FSpeakCommand implements Command {
 
 	@Override
