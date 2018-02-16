@@ -2,7 +2,7 @@
 - Depends on JDA https://github.com/DV8FromTheWorld/JDA
 
 # Info
-Version: 2.4.0
+Version: 2.4.0 (**Final Version. The MDCBot is being discontinued and is being replaced by [ComBot](https://github.com/MemeDistributionCo/ComBot)**)
 
 [Docs](https://memedistributionco.github.io/docs/MDCBot/)
 
